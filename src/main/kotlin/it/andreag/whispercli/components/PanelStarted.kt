@@ -1,26 +1,18 @@
 package it.andreag.whispercli.components
 
 import it.andreag.whispercli.model.AudioFile
-import javafx.scene.control.Label
-import javafx.scene.layout.BorderPane
 import javafx.scene.text.Text
 import javafx.scene.text.TextFlow
 
-class PanelStarted : BorderPane() {
-    private val br = "\r\n"
-    private var titleLabel: Label = Label()
+class PanelStarted : AudioFilePanel() {
     private var textFlow: TextFlow = TextFlow()
 
     init {
-        top = titleLabel
-        titleLabel.style = "-fx-font-weight: bold; -fx-font-size: 1.5em"
         center = textFlow
-        setMargin(titleLabel, SmallInsets())
         setMargin(textFlow, BigInsets())
     }
 
-    fun updateFromFile(audioFile: AudioFile) {
-        titleLabel.text = audioFile.description + " " + audioFile.getFormattedPercent()
+    override fun updateContent(transcriptionModel: String, audioFile: AudioFile) {
         audioFile.onMedia {
             textFlow.children.clear()
 

@@ -1,14 +1,16 @@
 package it.andreag.whispercli.model
 
 import java.time.LocalTime
+import java.time.temporal.TemporalUnit
+import kotlin.time.Duration.Companion.seconds
 
-class ParsedLine(line: String) {
+class ParsedLine {
     var from: LocalTime
     var to: LocalTime
     var text: String
     var valid: Boolean
 
-    init {
+    private constructor(line: String) {
         val seq = matchResult(line)
         try {
             from = LocalTime.parse("00:" + seq.elementAt(0).value)
@@ -21,6 +23,20 @@ class ParsedLine(line: String) {
             text = ""
             valid = false
         }
+    }
+
+    private constructor(line: AudioLine) {
+        from = localTimeFromSec(line.start)
+        to = localTimeFromSec(line.end)
+        text = line.text
+        valid = true
+    }
+
+    private fun localTimeFromSec(secs: Double): LocalTime {
+        var t = LocalTime.of(0, 0, 0, 0)
+        t.plusSeconds(secs.toLong())
+
+        return t
     }
 
     private fun matchResult(line: String) = Regex("([0-9][0-9]:[0-9][0-9].[0-9][0-9][0-9])").findAll(line)
@@ -36,6 +52,14 @@ class ParsedLine(line: String) {
 
         fun timeFromMs(ms: String): LocalTime {
             return LocalTime.parse("00:00:00").plusNanos((ms.replace(" ms", "").toDouble() * 1000000).toLong())
+        }
+
+        fun fromConsole(text: String): ParsedLine {
+            return ParsedLine(text)
+        }
+
+        fun fromAudioLine(audioLine: AudioLine): ParsedLine {
+            return ParsedLine(audioLine)
         }
     }
 }

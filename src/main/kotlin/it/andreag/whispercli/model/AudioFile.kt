@@ -4,6 +4,7 @@ import javafx.scene.media.Media
 import javafx.scene.media.MediaPlayer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import kotlinx.serialization.json.Json
 import java.io.File
 import java.security.MessageDigest
 
@@ -146,7 +147,7 @@ data class AudioFile(
 
     fun updatePercentFromString(line: String) {
         onMedia {
-            val l = ParsedLine(line)
+            val l = ParsedLine.fromConsole(line)
             if (!l.valid) {
                 return@onMedia
             }
@@ -184,5 +185,18 @@ data class AudioFile(
             )
         }
         return ""
+    }
+
+    fun loadParsedLines(transcriptionModel: String) {
+        parsedLines.clear()
+        val indexFile = File(getOutputDir(transcriptionModel), getFileNameWithExt("json"))
+        if (!indexFile.exists()) {
+            return
+        }
+        val json = indexFile.readText()
+        val audio = Json.decodeFromString<AudioFileData>(json)
+        audio.segments.forEach {
+            parsedLines.add(ParsedLine.fromAudioLine(it))
+        }
     }
 }

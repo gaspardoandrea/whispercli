@@ -2,6 +2,7 @@ package it.andreag.whispercli
 
 import it.andreag.whispercli.components.PanelNotStarted
 import it.andreag.whispercli.components.PanelStarted
+import it.andreag.whispercli.components.ResultPanel
 import it.andreag.whispercli.events.ThreadDispatcher
 import it.andreag.whispercli.events.ThreadEventListener
 import it.andreag.whispercli.model.AppPreferences
@@ -33,19 +34,17 @@ import java.util.*
 class MainController : Initializable, ListChangeListener<AudioFile>, PropertyChangeListener, ThreadEventListener {
     private val logger = KotlinLogging.logger {}
     lateinit var playAudioFileCtx: MenuItem
-
     lateinit var playAudioFileMenuItem: Button
+
     lateinit var playAudioFileItem: MenuItem
     lateinit var currentFileInfoStarted: PanelStarted
+    lateinit var currentFileResult: ResultPanel
     lateinit var currentFileInfo: PanelNotStarted
     lateinit var modelTiny: RadioMenuItem
     lateinit var modelBase: RadioMenuItem
     lateinit var modelSmall: RadioMenuItem
     lateinit var modelMedium: RadioMenuItem
     lateinit var modelLarge: RadioMenuItem
-    lateinit var panelTranscribed: ScrollPane
-    lateinit var panelNotTranscribed: ScrollPane
-    lateinit var panelNotStarted: ScrollPane
     lateinit var panelMoreThanOne: ScrollPane
 
     /** Menu items */
@@ -160,25 +159,27 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
         playAudioFileMenuItem.isDisable = playAudioFileItem.isDisable
         playAudioFileCtx.isDisable = playAudioFileItem.isDisable
 
-        panelTranscribed.isVisible = false
-        panelNotTranscribed.isVisible = false
-        panelNotStarted.isVisible = false
+        currentFileResult.isVisible = false
+        currentFileInfoStarted.isVisible = false
+        currentFileInfo.isVisible = false
         panelMoreThanOne.isVisible = false
         updatePanels()
     }
 
     private fun updatePanels() {
+        val model = AppPreferences.getInstance().getTranscriptionModel()
         if (isSelectionEmpty() || isSelectionMoreThanOne()) {
             panelMoreThanOne.isVisible = true
         } else if (isSelectedNew()) {
-            currentFileInfo.updateFromFile(getSelectedFile())
-            panelNotStarted.isVisible = true
+            currentFileInfo.updateFromFile(model, getSelectedFile())
+            currentFileInfo.isVisible = true
         } else if (isSelectedDone()) {
-            panelTranscribed.isVisible = true
+            currentFileResult.updateFromFile(model, getSelectedFile())
+            currentFileResult.isVisible = true
         } else if (isSelectedTranscribing()) {
             Platform.runLater {
-                currentFileInfoStarted.updateFromFile(getSelectedFile())
-                panelNotTranscribed.isVisible = true
+                currentFileInfoStarted.updateFromFile(model, getSelectedFile())
+                currentFileInfoStarted.isVisible = true
             }
         }
     }

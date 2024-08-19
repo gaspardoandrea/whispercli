@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import org.kordamp.ikonli.javafx.*?>
+<?import it.andreag.whispercli.components.ResultPanel?>
 <BorderPane prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.andreag.whispercli.MainController"
             fx:id="mainPane">
@@ -202,15 +203,9 @@
                         </contextMenu>
                     </ListView>
                     <StackPane>
-                        <ScrollPane fx:id="panelNotStarted" visible="false">
-                            <PanelNotStarted fx:id="currentFileInfo"/>
-                        </ScrollPane>
-                        <ScrollPane fx:id="panelNotTranscribed" visible="false">
-                            <PanelStarted fx:id="currentFileInfoStarted"/>
-                        </ScrollPane>
-                        <ScrollPane fx:id="panelTranscribed" visible="false">
-                            <Label text="Finished"/>
-                        </ScrollPane>
+                        <PanelNotStarted fx:id="currentFileInfo" visible="false"/>
+                        <PanelStarted fx:id="currentFileInfoStarted" visible="false"/>
+                        <ResultPanel fx:id="currentFileResult" visible="false"/>
                         <ScrollPane fx:id="panelMoreThanOne"/>
                     </StackPane>
                 </SplitPane>
