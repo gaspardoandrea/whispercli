@@ -42,13 +42,12 @@ javafx {
 dependencies {
     implementation('org.controlsfx:controlsfx:11.1.2')
     implementation('org.kordamp.ikonli:ikonli-javafx:12.3.1')
-    implementation('io.github.oshai:kotlin-logging-jvm:7.0.0')
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC")
     implementation('org.kordamp.ikonli:ikonli-materialdesign2-pack:12.3.1')
     implementation('org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3')
     implementation('org.slf4j:slf4j-api:1.7.25')
     implementation('org.slf4j:slf4j-simple:1.7.25')
-    implementation('io.github.oshai:kotlin-logging-jvm:5.1.0')
+    implementation 'io.github.microutils:kotlin-logging-jvm:2.0.11'
     implementation('org.openjfx:javafx-media:23-ea+22')
     implementation('commons-codec:commons-codec:1.17.0')
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")

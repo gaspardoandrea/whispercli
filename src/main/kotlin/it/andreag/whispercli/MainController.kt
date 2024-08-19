@@ -1,11 +1,14 @@
 package it.andreag.whispercli
 
 import it.andreag.whispercli.components.PanelNotStarted
+import it.andreag.whispercli.events.ThreadDispatcher
+import it.andreag.whispercli.events.ThreadEventListener
 import it.andreag.whispercli.model.AppPreferences
 import it.andreag.whispercli.model.ApplicationPersistence
 import it.andreag.whispercli.model.AudioFile
 import it.andreag.whispercli.model.MediaPlayerManager
 import it.andreag.whispercli.setup.Checker
+import it.andreag.whispercli.setup.ComponentsUpdater
 import javafx.application.Platform
 import javafx.collections.ListChangeListener
 import javafx.event.ActionEvent
@@ -18,6 +21,7 @@ import javafx.scene.control.Alert.AlertType
 import javafx.scene.layout.BorderPane
 import javafx.stage.FileChooser
 import javafx.stage.Stage
+import mu.KotlinLogging
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 import java.io.File
@@ -25,7 +29,9 @@ import java.net.URL
 import java.util.*
 
 
-class MainController : Initializable, ListChangeListener<AudioFile>, PropertyChangeListener {
+class MainController : Initializable, ListChangeListener<AudioFile>, PropertyChangeListener, ThreadEventListener {
+    private val logger = KotlinLogging.logger {}
+
     lateinit var playAudioFileCtx: MenuItem
     lateinit var playAudioFileMenuItem: Button
     lateinit var playAudioFileItem: MenuItem
@@ -41,6 +47,7 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
     lateinit var panelMoreThanOne: ScrollPane
 
     /** Menu items */
+    lateinit var updateWhisperSetupMenuItem: MenuItem
     lateinit var checkWhisperSetupMenuItem: MenuItem
     lateinit var infoLabel: Label
     lateinit var splitPane: SplitPane
@@ -65,6 +72,7 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
         ApplicationPersistence.getInstance().loadStatus(listView)
         listView.items.forEach { it.addPropertyChangeListener(this) }
         listView.selectionModel.selectionMode = SelectionMode.MULTIPLE
+        ThreadDispatcher.getInstance().addListener(this)
 
         listView.selectionModel.selectedItems.addListener(this)
         val splitPosition = AppPreferences.getInstance().getSplitPosition()
@@ -88,7 +96,7 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
     }
 
     override fun onChanged(audioFileChange: ListChangeListener.Change<out AudioFile>?) {
-        recalcEnabledActions()
+        refreshEnabledActions()
     }
 
     fun saveStatus() {
@@ -127,12 +135,17 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
         refresh()
     }
 
-    fun recalcEnabledActions() {
+    private fun refreshEnabledActions() {
+        logger.debug { "refreshEnabledActions" }
+
         removeItem.isDisable = isSelectionEmpty()
-        transcribeFilesItem.isDisable = !selectionContainsNew()
+        transcribeFilesItem.isDisable = !selectionContainsNew() || ThreadDispatcher.getInstance().hasBlockingTasks()
         resetFilesItem.isDisable = !selectionContainsTranscribed()
         setDescriptionButton.isDisable = !isSelectionOne()
         playAudioFileItem.isDisable = !isSelectionOne()
+
+        updateWhisperSetupMenuItem.isDisable = ThreadDispatcher.getInstance().hasTasks()
+        checkWhisperSetupMenuItem.isDisable = ThreadDispatcher.getInstance().hasTasks()
 
         removeItemButton.isDisable = removeItem.isDisable
         resetFilesButton.isDisable = resetFilesItem.isDisable
@@ -246,7 +259,7 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
 
     private fun refresh() {
         listView.refresh()
-        recalcEnabledActions()
+        refreshEnabledActions()
     }
 
     private fun getSelectionAsString(): String {
@@ -277,12 +290,23 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
     }
 
     fun checkWhisperSetup(delayed: Boolean) {
-        val th = Thread(Checker(infoLabel, checkWhisperSetupMenuItem, delayed))
+        val th = Thread(Checker(infoLabel, delayed))
+        th.isDaemon = true
+        th.start()
+    }
+
+    fun updateWhisperSetup() {
+        updateWhisperSetup(false)
+    }
+
+    fun updateWhisperSetup(delayed: Boolean) {
+        val th = Thread(ComponentsUpdater(infoLabel, delayed))
         th.isDaemon = true
         th.start()
     }
 
     fun showAboutPopup() {
+        logger.debug { "showAboutPopup" }
         val newWindow = Stage()
         newWindow.title = "About"
         val loader = FXMLLoader(javaClass.getResource("aboutWindow.fxml"))
@@ -314,5 +338,9 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
 
     override fun propertyChange(evt: PropertyChangeEvent?) {
         refresh()
+    }
+
+    override fun onTaskListChanged() {
+        refreshEnabledActions()
     }
 }

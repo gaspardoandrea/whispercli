@@ -75,6 +75,12 @@
                         <FontIcon iconLiteral="mdi2u-update" iconSize="20"/>
                     </graphic>
                 </MenuItem>
+                <MenuItem mnemonicParsing="false" text="Update whisper components" disable="true"
+                          onAction="#updateWhisperSetup" fx:id="updateWhisperSetupMenuItem">
+                    <graphic>
+                        <FontIcon iconLiteral="mdi2t-toy-brick-plus" iconSize="20"/>
+                    </graphic>
+                </MenuItem>
                 <MenuItem mnemonicParsing="false" text="About" onAction="#showAboutPopup" accelerator="ctrl+h">
                     <graphic>
                         <FontIcon iconLiteral="mdi2h-help-box" iconSize="20"/>

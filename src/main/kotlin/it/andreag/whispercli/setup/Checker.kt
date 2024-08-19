@@ -1,15 +1,14 @@
 package it.andreag.whispercli.setup
 
-import io.github.oshai.kotlinlogging.KotlinLogging
+import it.andreag.whispercli.events.ThreadDispatcher
 import javafx.application.Platform
 import javafx.concurrent.Task
 import javafx.scene.control.Label
-import javafx.scene.control.MenuItem
+import mu.KotlinLogging
 import java.awt.Desktop
 import java.net.URI
 
-
-class Checker(private val label: Label, private val checkWhisperSetupMenuItem: MenuItem, private val delayed: Boolean) :
+class Checker(private val label: Label, private val delayed: Boolean) :
     Task<Boolean>() {
     private val pythonInstallUrl = "https://www.python.org/downloads/windows/"
     private val logger = KotlinLogging.logger {}
@@ -17,12 +16,11 @@ class Checker(private val label: Label, private val checkWhisperSetupMenuItem: M
 
     override fun call(): Boolean {
         logger.debug { "Check for correct install" }
+        ThreadDispatcher.getInstance().addBlockingThread(this)
         if (delayed) {
             Thread.sleep(1500L)
         }
-        Platform.runLater { checkWhisperSetupMenuItem.isDisable = true }
         val rv = checkInstall()
-        Platform.runLater { checkWhisperSetupMenuItem.isDisable = false }
 
         return rv
     }

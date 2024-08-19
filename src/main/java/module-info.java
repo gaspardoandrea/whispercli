@@ -7,12 +7,12 @@ module it.andreag.whispercli {
 
     requires org.controlsfx.controls;
     requires org.kordamp.ikonli.javafx;
-    requires io.github.oshai.kotlinlogging;
     requires java.prefs;
     requires java.desktop;
     requires kotlinx.serialization.core;
     requires kotlinx.serialization.json;
     requires org.apache.commons.codec;
+    requires kotlin.logging.jvm;
 
     opens it.andreag.whispercli to javafx.fxml;
     opens it.andreag.whispercli.components to javafx.fxml;
