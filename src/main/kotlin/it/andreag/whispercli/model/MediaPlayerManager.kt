@@ -10,7 +10,7 @@ class MediaPlayerManager {
         return MediaPlayer(media)
     }
 
-    fun setPlayingPlayer(player:MediaPlayer?) {
+    private fun setPlayingPlayer(player: MediaPlayer?) {
         playingMediaPlayer?.stop()
         playingMediaPlayer = player
     }

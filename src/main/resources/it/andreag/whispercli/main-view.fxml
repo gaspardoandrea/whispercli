@@ -2,6 +2,7 @@
 <!-- https://kordamp.org/ikonli/cheat-sheet-materialdesign2.html -->
 
 <?import it.andreag.whispercli.components.PanelNotStarted?>
+<?import it.andreag.whispercli.components.PanelStarted?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
@@ -59,7 +60,7 @@
                 </MenuItem>
                 <Menu text="Model">
                     <fx:define>
-                        <ToggleGroup fx:id="model" />
+                        <ToggleGroup fx:id="model"/>
                     </fx:define>
                     <RadioMenuItem toggleGroup="$model" fx:id="modelTiny" text="Tiny" onAction="#modelSelected"/>
                     <RadioMenuItem toggleGroup="$model" fx:id="modelBase" text="Base" onAction="#modelSelected"/>
@@ -205,10 +206,10 @@
                             <PanelNotStarted fx:id="currentFileInfo"/>
                         </ScrollPane>
                         <ScrollPane fx:id="panelNotTranscribed" visible="false">
-                            <Label text="Uno solo, non finito"/>
+                            <PanelStarted fx:id="currentFileInfoStarted"/>
                         </ScrollPane>
                         <ScrollPane fx:id="panelTranscribed" visible="false">
-                            <Label text="Uno solo, finito"/>
+                            <Label text="Finished"/>
                         </ScrollPane>
                         <ScrollPane fx:id="panelMoreThanOne"/>
                     </StackPane>

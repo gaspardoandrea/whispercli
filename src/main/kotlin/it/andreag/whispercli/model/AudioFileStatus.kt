@@ -4,7 +4,7 @@ enum class AudioFileStatus {
     New, Transcribing, Transcribed;
 
     fun toIcon(): String {
-        return when(this) {
+        return when (this) {
             New -> "mdi2f-format-clear"
             Transcribing -> "mdi2b-book-open-page-variant-outline"
             Transcribed -> "mdi2c-check-circle"

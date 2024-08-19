@@ -11,8 +11,6 @@ open class Observable {
     @Transient
     protected var propertyChangeSupport: PropertyChangeSupport? = null
 
-    fun Observable() {}
-
     fun setObservableObject(observable: Observable?) {
         propertyChangeSupport = PropertyChangeSupport(observable)
     }

@@ -5,6 +5,7 @@ import javafx.scene.media.MediaPlayer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import java.io.File
+import java.security.MessageDigest
 
 
 @Serializable
@@ -94,7 +95,15 @@ data class AudioFile(
     private fun getOutputDir() = File(ApplicationPersistence.getInstance().getDataPath(), getNormalizedName())
 
     private fun getNormalizedName(): String {
-        return file.name
+        val md = MessageDigest.getInstance("MD5")
+        val hashBytes = md.digest(file.absolutePath.toByteArray())
+        val hexString = hashBytes.joinToString("-") { "%02x".format(it) }
+
+        return buildString {
+            append(file.name)
+            append("-")
+            append(hexString)
+        }
     }
 
     fun deleteAllOutputFiles() {
@@ -152,10 +161,28 @@ data class AudioFile(
     }
 
     fun renderLabel(): String {
-        return description + if (isTranscribing() && percent != null) " [$percent%]" else ""
+        return description + getFormattedPercent()
+    }
+
+    fun getFormattedPercent(): String {
+        return if (isTranscribing() && percent != null) " [$percent%]" else ""
     }
 
     fun renderTooltip(): String? {
         return file.name
+    }
+
+    fun getFormattedDuration(): String {
+        val media = getMedia()
+        val duration = media?.duration
+        if (duration != null) {
+            return String.Companion.format(
+                "%02.0f:%02.0f:%02.0f",
+                duration.toHours(),
+                duration.toMinutes(),
+                duration.toSeconds()
+            )
+        }
+        return ""
     }
 }

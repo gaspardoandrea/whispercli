@@ -1,6 +1,7 @@
 package it.andreag.whispercli
 
 import it.andreag.whispercli.components.PanelNotStarted
+import it.andreag.whispercli.components.PanelStarted
 import it.andreag.whispercli.events.ThreadDispatcher
 import it.andreag.whispercli.events.ThreadEventListener
 import it.andreag.whispercli.model.AppPreferences
@@ -31,10 +32,11 @@ import java.util.*
 
 class MainController : Initializable, ListChangeListener<AudioFile>, PropertyChangeListener, ThreadEventListener {
     private val logger = KotlinLogging.logger {}
-
     lateinit var playAudioFileCtx: MenuItem
+
     lateinit var playAudioFileMenuItem: Button
     lateinit var playAudioFileItem: MenuItem
+    lateinit var currentFileInfoStarted: PanelStarted
     lateinit var currentFileInfo: PanelNotStarted
     lateinit var modelTiny: RadioMenuItem
     lateinit var modelBase: RadioMenuItem
@@ -99,7 +101,7 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
         refreshEnabledActions()
     }
 
-    fun saveStatus() {
+    private fun saveStatus() {
         ApplicationPersistence.getInstance().saveStatus()
         AppPreferences.getInstance().setWindowSize(mainPane.scene.width, mainPane.scene.height)
         AppPreferences.getInstance().setSplitPositions(splitPane.dividerPositions)
@@ -174,7 +176,10 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
         } else if (isSelectedDone()) {
             panelTranscribed.isVisible = true
         } else if (isSelectedTranscribing()) {
-            panelNotTranscribed.isVisible = true
+            Platform.runLater {
+                currentFileInfoStarted.updateFromFile(getSelectedFile())
+                panelNotTranscribed.isVisible = true
+            }
         }
     }
 
@@ -289,18 +294,14 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
         checkWhisperSetup(false)
     }
 
-    fun checkWhisperSetup(delayed: Boolean) {
+    private fun checkWhisperSetup(delayed: Boolean) {
         val th = Thread(Checker(infoLabel, delayed))
         th.isDaemon = true
         th.start()
     }
 
     fun updateWhisperSetup() {
-        updateWhisperSetup(false)
-    }
-
-    fun updateWhisperSetup(delayed: Boolean) {
-        val th = Thread(ComponentsUpdater(infoLabel, delayed))
+        val th = Thread(ComponentsUpdater(infoLabel))
         th.isDaemon = true
         th.start()
     }

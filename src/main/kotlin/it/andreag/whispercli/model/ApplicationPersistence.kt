@@ -7,7 +7,7 @@ import kotlinx.serialization.json.Json
 import java.io.File
 
 
-class ApplicationPersistence(): ListChangeListener<AudioFile> {
+class ApplicationPersistence : ListChangeListener<AudioFile> {
     private var saving: Boolean = true
     private var listView: ListView<AudioFile>? = null
 

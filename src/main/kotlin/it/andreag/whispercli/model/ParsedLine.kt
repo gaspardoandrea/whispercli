@@ -23,14 +23,14 @@ class ParsedLine(line: String) {
         }
     }
 
-    fun matchResult(line: String) = Regex("([0-9][0-9]:[0-9][0-9].[0-9][0-9][0-9])").findAll(line)
+    private fun matchResult(line: String) = Regex("([0-9][0-9]:[0-9][0-9].[0-9][0-9][0-9])").findAll(line)
 
     companion object {
         fun appendHours(line: String): String {
-            if (line.count { it == ':' } == 1) {
-                return "00:$line"
+            return if (line.count { it == ':' } == 1) {
+                "00:$line"
             } else {
-                return line
+                line
             }
         }
 
