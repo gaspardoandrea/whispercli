@@ -3,7 +3,7 @@ package it.andreag.whispercli.components.result
 import it.andreag.whispercli.components.AudioFilePanel
 import it.andreag.whispercli.components.insets.BigInsets
 import it.andreag.whispercli.model.AudioFile
-import it.andreag.whispercli.service.MediaPlayerManager
+import it.andreag.whispercli.model.TableAudioLine
 
 class ResultPanel : AudioFilePanel() {
     private val table: ResultTable = ResultTable()
@@ -15,8 +15,9 @@ class ResultPanel : AudioFilePanel() {
             if (newSelection == null) {
                 return@addListener
             }
-            newSelection.audioFile.onMedia {
-                MediaPlayerManager.getInstance().play(newSelection)
+            newSelection.audioLine.audioFile.onMedia {
+                // TODO FAR FUNZIONARE
+//                MediaPlayerManager.getInstance().play(newSelection)
             }
         })
     }
@@ -24,6 +25,9 @@ class ResultPanel : AudioFilePanel() {
     override fun updateContent(transcriptionModel: String, audioFile: AudioFile) {
         table.dataList.clear()
         audioFile.loadParsedLines(transcriptionModel)
-        table.dataList.addAll(audioFile.parsedLines)
+        val lines: ArrayList<TableAudioLine> = ArrayList()
+
+        audioFile.parsedLines.forEach { lines.add(TableAudioLine(it)) }
+        table.dataList.addAll(lines)
     }
 }

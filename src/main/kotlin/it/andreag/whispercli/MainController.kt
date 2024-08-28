@@ -345,7 +345,8 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
     }
 
     fun playAudioFile() {
-        MediaPlayerManager.getInstance().play(getSelectedFile())
+        // TODO
+//        MediaPlayerManager.getInstance().play(getSelectedFile())
     }
 
     override fun propertyChange(evt: PropertyChangeEvent?) {
