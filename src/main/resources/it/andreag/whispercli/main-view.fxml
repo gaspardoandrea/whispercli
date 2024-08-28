@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- https://kordamp.org/ikonli/cheat-sheet-materialdesign2.html -->
 
-<?import it.andreag.whispercli.components.PanelNotStarted?>
-<?import it.andreag.whispercli.components.PanelStarted?>
+<?import it.andreag.whispercli.components.stack.PanelNotStarted?>
+<?import it.andreag.whispercli.components.stack.PanelStarted?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import org.kordamp.ikonli.javafx.*?>
-<?import it.andreag.whispercli.components.ResultPanel?>
+<?import it.andreag.whispercli.components.result.ResultPanel?>
+<?import it.andreag.whispercli.components.AudioListView?>
+
 <BorderPane prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.andreag.whispercli.MainController"
             fx:id="mainPane">
@@ -161,7 +163,7 @@
             </top>
             <center>
                 <SplitPane fx:id="splitPane">
-                    <ListView fx:id="listView">
+                    <AudioListView fx:id="listView">
                         <contextMenu>
                             <ContextMenu fx:id="contextMenu">
                                 <items>
@@ -201,7 +203,7 @@
                                 </items>
                             </ContextMenu>
                         </contextMenu>
-                    </ListView>
+                    </AudioListView>
                     <StackPane fx:id="stackPane">
                         <PanelNotStarted fx:id="currentFileInfo" visible="false"/>
                         <PanelStarted fx:id="currentFileInfoStarted" visible="false"/>

@@ -16,5 +16,7 @@ module it.andreag.whispercli {
 
     opens it.andreag.whispercli to javafx.fxml;
     opens it.andreag.whispercli.components to javafx.fxml;
+    opens it.andreag.whispercli.components.stack to javafx.fxml;
+    opens it.andreag.whispercli.components.result to javafx.fxml;
     exports it.andreag.whispercli;
 }

@@ -1,24 +1,18 @@
-package it.andreag.whispercli.components
+package it.andreag.whispercli.components.result
 
 import it.andreag.whispercli.model.ParsedLine
-import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
-import javafx.scene.control.TableColumn
 import javafx.scene.control.TableView
 
 class ResultTable() : TableView<ParsedLine>() {
-    private val lineText: TableColumn<ParsedLine, String> = TableColumn()
+    private val lineText: TextTableColumn = TextTableColumn()
     val dataList: ObservableList<ParsedLine> = FXCollections.observableArrayList()
         get() = field
 
     init {
         isEditable = true
-        lineText.prefWidth = 600.0
-        lineText.text = "Text"
-        lineText.setCellValueFactory {
-            SimpleStringProperty(it.value.text)
-        }
+        lineText.prefWidthProperty().bind(widthProperty().subtract(30))
         columns.add(lineText)
         setItems(dataList)
     }

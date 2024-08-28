@@ -1,8 +1,9 @@
 package it.andreag.whispercli
 
-import it.andreag.whispercli.components.PanelNotStarted
-import it.andreag.whispercli.components.PanelStarted
-import it.andreag.whispercli.components.ResultPanel
+import it.andreag.whispercli.components.AudioListView
+import it.andreag.whispercli.components.stack.PanelNotStarted
+import it.andreag.whispercli.components.stack.PanelStarted
+import it.andreag.whispercli.components.result.ResultPanel
 import it.andreag.whispercli.events.ThreadDispatcher
 import it.andreag.whispercli.events.ThreadEventListener
 import it.andreag.whispercli.service.AppPreferences
@@ -67,7 +68,7 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
     lateinit var transcribeFilesItem: MenuItem
     lateinit var removeItemButton: Button
     lateinit var removeItem: MenuItem
-    lateinit var listView: ListView<AudioFile>
+    lateinit var listView: AudioListView
     lateinit var mainPane: BorderPane
 
     override fun initialize(url: URL?, resource: ResourceBundle?) {
@@ -85,6 +86,12 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
         SplitPane.setResizableWithParent(listView, false)
         checkWhisperSetup(true)
         updateTranscriptionModel()
+        selectFirstItem()
+    }
+
+    private fun selectFirstItem() {
+        if (listView.items.isEmpty()) return
+        listView.selectionModel.select(0)
     }
 
     private fun updateTranscriptionModel() {

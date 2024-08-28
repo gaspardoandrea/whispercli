@@ -34,6 +34,7 @@ class MediaPlayerManager {
         if (player.status == MediaPlayer.Status.PLAYING) {
             player.stop()
         }
+        player.seek(Duration(0.0))
         player.seek(Duration((from * 1000).toDouble()))
         player.play()
     }

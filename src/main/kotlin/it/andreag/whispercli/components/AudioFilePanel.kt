@@ -1,5 +1,6 @@
 package it.andreag.whispercli.components
 
+import it.andreag.whispercli.components.insets.SmallInsets
 import it.andreag.whispercli.model.AudioFile
 import javafx.scene.control.Label
 import javafx.scene.layout.BorderPane

@@ -1,5 +1,7 @@
-package it.andreag.whispercli.components
+package it.andreag.whispercli.components.result
 
+import it.andreag.whispercli.components.AudioFilePanel
+import it.andreag.whispercli.components.insets.BigInsets
 import it.andreag.whispercli.model.AudioFile
 import it.andreag.whispercli.service.MediaPlayerManager
 

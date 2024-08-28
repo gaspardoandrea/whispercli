@@ -1,10 +1,12 @@
-package it.andreag.whispercli.components
+package it.andreag.whispercli.components.stack
 
+import it.andreag.whispercli.components.AudioFilePanel
+import it.andreag.whispercli.components.insets.BigInsets
 import it.andreag.whispercli.model.AudioFile
 import javafx.scene.text.Text
 import javafx.scene.text.TextFlow
 
-class PanelStarted : AudioFilePanel() {
+class PanelNotStarted : AudioFilePanel() {
     private var textFlow: TextFlow = TextFlow()
 
     init {

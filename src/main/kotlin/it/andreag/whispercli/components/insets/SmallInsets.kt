@@ -1,4 +1,4 @@
-package it.andreag.whispercli.components
+package it.andreag.whispercli.components.insets
 
 import javafx.geometry.Insets
 
