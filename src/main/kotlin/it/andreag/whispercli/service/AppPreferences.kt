@@ -1,4 +1,4 @@
-package it.andreag.whispercli.model
+package it.andreag.whispercli.service
 
 import javafx.geometry.Dimension2D
 import java.io.File

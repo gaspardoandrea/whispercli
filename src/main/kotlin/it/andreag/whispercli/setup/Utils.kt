@@ -1,7 +1,7 @@
 package it.andreag.whispercli.setup
 
 import it.andreag.whispercli.WhisperApplication
-import it.andreag.whispercli.model.AppPreferences
+import it.andreag.whispercli.service.AppPreferences
 import it.andreag.whispercli.model.AudioFile
 import mu.KotlinLogging
 import java.io.BufferedReader

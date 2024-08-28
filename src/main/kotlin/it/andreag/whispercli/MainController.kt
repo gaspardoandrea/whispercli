@@ -5,10 +5,10 @@ import it.andreag.whispercli.components.PanelStarted
 import it.andreag.whispercli.components.ResultPanel
 import it.andreag.whispercli.events.ThreadDispatcher
 import it.andreag.whispercli.events.ThreadEventListener
-import it.andreag.whispercli.model.AppPreferences
-import it.andreag.whispercli.model.ApplicationPersistence
+import it.andreag.whispercli.service.AppPreferences
+import it.andreag.whispercli.service.ApplicationPersistence
 import it.andreag.whispercli.model.AudioFile
-import it.andreag.whispercli.model.MediaPlayerManager
+import it.andreag.whispercli.service.MediaPlayerManager
 import it.andreag.whispercli.setup.Checker
 import it.andreag.whispercli.setup.ComponentsUpdater
 import javafx.application.Platform
@@ -21,6 +21,7 @@ import javafx.scene.Scene
 import javafx.scene.control.*
 import javafx.scene.control.Alert.AlertType
 import javafx.scene.layout.BorderPane
+import javafx.scene.layout.StackPane
 import javafx.stage.FileChooser
 import javafx.stage.Stage
 import mu.KotlinLogging
@@ -32,6 +33,7 @@ import java.util.*
 
 
 class MainController : Initializable, ListChangeListener<AudioFile>, PropertyChangeListener, ThreadEventListener {
+    lateinit var stackPane: StackPane
     private val logger = KotlinLogging.logger {}
     lateinit var playAudioFileCtx: MenuItem
     lateinit var playAudioFileMenuItem: Button
@@ -80,6 +82,7 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
         if (splitPosition != null) {
             splitPane.setDividerPosition(0, splitPosition)
         }
+        SplitPane.setResizableWithParent(listView, false)
         checkWhisperSetup(true)
         updateTranscriptionModel()
     }

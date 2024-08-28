@@ -1,5 +1,6 @@
-package it.andreag.whispercli.model
+package it.andreag.whispercli.service
 
+import it.andreag.whispercli.model.AudioFile
 import javafx.collections.ListChangeListener
 import javafx.scene.control.ListView
 import kotlinx.serialization.encodeToString

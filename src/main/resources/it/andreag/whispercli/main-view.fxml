@@ -202,7 +202,7 @@
                             </ContextMenu>
                         </contextMenu>
                     </ListView>
-                    <StackPane>
+                    <StackPane fx:id="stackPane">
                         <PanelNotStarted fx:id="currentFileInfo" visible="false"/>
                         <PanelStarted fx:id="currentFileInfoStarted" visible="false"/>
                         <ResultPanel fx:id="currentFileResult" visible="false"/>

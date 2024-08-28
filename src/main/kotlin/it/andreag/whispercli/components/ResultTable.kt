@@ -14,9 +14,6 @@ class ResultTable() : TableView<ParsedLine>() {
 
     init {
         isEditable = true
-        prefWidth = 700.0
-        prefHeight = 400.0
-
         lineText.prefWidth = 600.0
         lineText.text = "Text"
         lineText.setCellValueFactory {

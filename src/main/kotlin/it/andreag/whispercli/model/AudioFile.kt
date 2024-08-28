@@ -1,5 +1,8 @@
 package it.andreag.whispercli.model
 
+import it.andreag.whispercli.service.AppPreferences
+import it.andreag.whispercli.service.ApplicationPersistence
+import it.andreag.whispercli.service.MediaPlayerManager
 import javafx.scene.media.Media
 import javafx.scene.media.MediaPlayer
 import kotlinx.serialization.Serializable
@@ -147,7 +150,7 @@ data class AudioFile(
 
     fun updatePercentFromString(line: String) {
         onMedia {
-            val l = ParsedLine.fromConsole(line)
+            val l = ParsedLine.fromConsole(line, this)
             if (!l.valid) {
                 return@onMedia
             }
@@ -196,7 +199,7 @@ data class AudioFile(
         val json = indexFile.readText()
         val audio = Json.decodeFromString<AudioFileData>(json)
         audio.segments.forEach {
-            parsedLines.add(ParsedLine.fromAudioLine(it))
+            parsedLines.add(ParsedLine.fromAudioLine(it, this))
         }
     }
 }

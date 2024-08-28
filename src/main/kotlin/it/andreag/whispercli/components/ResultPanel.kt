@@ -1,15 +1,22 @@
 package it.andreag.whispercli.components
 
 import it.andreag.whispercli.model.AudioFile
-import javafx.scene.control.ScrollPane
+import it.andreag.whispercli.service.MediaPlayerManager
 
 class ResultPanel : AudioFilePanel() {
     private val table: ResultTable = ResultTable()
-    private val scroller: ScrollPane = ScrollPane(table)
 
     init {
-        center = scroller
-        setMargin(scroller, BigInsets())
+        center = table
+        setMargin(table, BigInsets())
+        table.selectionModel.selectedItemProperty().addListener({ obs, oldSelection, newSelection ->
+            if (newSelection == null) {
+                return@addListener
+            }
+            newSelection.audioFile.onMedia {
+                MediaPlayerManager.getInstance().play(newSelection)
+            }
+        })
     }
 
     override fun updateContent(transcriptionModel: String, audioFile: AudioFile) {

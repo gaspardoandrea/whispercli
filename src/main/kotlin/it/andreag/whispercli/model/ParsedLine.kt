@@ -1,17 +1,17 @@
 package it.andreag.whispercli.model
 
 import java.time.LocalTime
-import java.time.temporal.TemporalUnit
-import kotlin.time.Duration.Companion.seconds
 
 class ParsedLine {
     var from: LocalTime
     var to: LocalTime
     var text: String
     var valid: Boolean
+    var audioFile: AudioFile
 
-    private constructor(line: String) {
+    private constructor(line: String, audioFile: AudioFile) {
         val seq = matchResult(line)
+        this.audioFile = audioFile
         try {
             from = LocalTime.parse("00:" + seq.elementAt(0).value)
             to = LocalTime.parse("00:" + seq.elementAt(1).value)
@@ -25,7 +25,8 @@ class ParsedLine {
         }
     }
 
-    private constructor(line: AudioLine) {
+    private constructor(line: AudioLine, audioFile: AudioFile) {
+        this.audioFile = audioFile
         from = localTimeFromSec(line.start)
         to = localTimeFromSec(line.end)
         text = line.text
@@ -33,10 +34,9 @@ class ParsedLine {
     }
 
     private fun localTimeFromSec(secs: Double): LocalTime {
-        var t = LocalTime.of(0, 0, 0, 0)
-        t.plusSeconds(secs.toLong())
+        val t = LocalTime.of(0, 0, 0, 0)
 
-        return t
+        return t.plusSeconds(secs.toLong())
     }
 
     private fun matchResult(line: String) = Regex("([0-9][0-9]:[0-9][0-9].[0-9][0-9][0-9])").findAll(line)
@@ -54,12 +54,12 @@ class ParsedLine {
             return LocalTime.parse("00:00:00").plusNanos((ms.replace(" ms", "").toDouble() * 1000000).toLong())
         }
 
-        fun fromConsole(text: String): ParsedLine {
-            return ParsedLine(text)
+        fun fromConsole(text: String, audioFile: AudioFile): ParsedLine {
+            return ParsedLine(text, audioFile)
         }
 
-        fun fromAudioLine(audioLine: AudioLine): ParsedLine {
-            return ParsedLine(audioLine)
+        fun fromAudioLine(audioLine: AudioLine, audioFile: AudioFile): ParsedLine {
+            return ParsedLine(audioLine, audioFile)
         }
     }
 }

@@ -1,6 +1,6 @@
 package it.andreag.whispercli
 
-import it.andreag.whispercli.model.AppPreferences
+import it.andreag.whispercli.service.AppPreferences
 import javafx.application.Application
 import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
