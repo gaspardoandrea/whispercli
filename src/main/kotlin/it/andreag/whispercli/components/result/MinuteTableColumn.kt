@@ -4,12 +4,16 @@ import it.andreag.whispercli.model.ParsedLine
 import javafx.beans.property.SimpleStringProperty
 import javafx.scene.control.TableColumn
 
-class TextTableColumn : TableColumn<ParsedLine, String>() {
+class MinuteTableColumn : TableColumn<ParsedLine, String>() {
     init {
-        text = "Text"
+        text = "Position"
         isResizable = false
         setCellValueFactory {
-            SimpleStringProperty(it.value.text)
+            SimpleStringProperty(buildString {
+                append(it.value.from.toString())
+                append(" - ")
+                append(it.value.to.toString())
+            })
         }
         isSortable = false
 
