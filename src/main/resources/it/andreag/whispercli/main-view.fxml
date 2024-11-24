@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- https://kordamp.org/ikonli/cheat-sheet-materialdesign2.html -->
-<!-- https://kordamp.org/ikonli/cheat-sheet-fontawesome5.html -->
+<!-- https://kordamp.org/ikonli/cheat-sheet-bootstrapicons.html -->
 
+<?import it.andreag.whispercli.components.AudioListView?>
+<?import it.andreag.whispercli.components.result.ResultPanel?>
 <?import it.andreag.whispercli.components.stack.PanelNotStarted?>
 <?import it.andreag.whispercli.components.stack.PanelStarted?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import org.kordamp.ikonli.javafx.*?>
-<?import it.andreag.whispercli.components.result.ResultPanel?>
-<?import it.andreag.whispercli.components.AudioListView?>
-
 <BorderPane prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.andreag.whispercli.MainController"
             fx:id="mainPane">
@@ -45,7 +43,7 @@
                 <MenuItem text="%menuTranscribe" onAction="#transcribeFiles" disable="true"
                           fx:id="transcribeFilesItem">
                     <graphic>
-                        <FontIcon iconLiteral="%iconTranscribe" iconSize="20"/>
+                        <FontIcon iconLiteral="%iconTranscribe" iconSize="20" iconColor="firebrick"/>
                     </graphic>
                 </MenuItem>
                 <MenuItem text="%menuReset" onAction="#resetFiles" disable="true"
@@ -96,7 +94,11 @@
                 <CheckMenuItem mnemonicParsing="false"
                                text="%checkWhisperSetupOnStartup"
                                fx:id="toggleCheckOnStartup"
-                               onAction="#toggleCheckOnStartup"/>
+                               onAction="#toggleCheckOnStartup">
+                    <graphic>
+                        <FontIcon iconLiteral="%iconSetupOnStartup" iconSize="20"/>
+                    </graphic>
+                </CheckMenuItem>
                 <SeparatorMenuItem/>
                 <MenuItem text="%aboutWhisperCli" onAction="#showAboutPopup" accelerator="ctrl+h">
                     <graphic>
@@ -142,7 +144,7 @@
                             <Tooltip text="%transcribe"/>
                         </tooltip>
                         <graphic>
-                            <FontIcon iconLiteral="%iconTranscribe" iconSize="24"/>
+                            <FontIcon iconLiteral="%iconTranscribe" iconSize="24" iconColor="firebrick"/>
                         </graphic>
                     </Button>
                     <Button onAction="#resetFiles" fx:id="resetFilesButton" disable="true">
@@ -190,7 +192,7 @@
                                             <MenuItem text="%transcribe" onAction="#transcribeFiles"
                                                       disable="true" fx:id="transcribeFilesItemCtx">
                                                 <graphic>
-                                                    <FontIcon iconLiteral="%iconTranscribe" iconSize="20"/>
+                                                    <FontIcon iconLiteral="%iconTranscribe" iconSize="20" iconColor="firebrick"/>
                                                 </graphic>
                                             </MenuItem>
                                             <MenuItem text="%remove" onAction="#removeFiles"
