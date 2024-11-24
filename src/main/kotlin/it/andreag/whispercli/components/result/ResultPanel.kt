@@ -4,6 +4,7 @@ import it.andreag.whispercli.components.AudioFilePanel
 import it.andreag.whispercli.components.insets.BigInsets
 import it.andreag.whispercli.model.AudioFile
 import it.andreag.whispercli.model.TableAudioLine
+import it.andreag.whispercli.service.MediaPlayerManager
 
 class ResultPanel : AudioFilePanel() {
     private val table: ResultTable = ResultTable()
@@ -17,7 +18,7 @@ class ResultPanel : AudioFilePanel() {
             }
             newSelection.audioLine.audioFile.onMedia {
                 // TODO FAR FUNZIONARE
-//                MediaPlayerManager.getInstance().play(newSelection)
+                MediaPlayerManager.getInstance().play(newSelection.audioLine)
             }
         })
     }

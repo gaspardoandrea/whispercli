@@ -19,9 +19,11 @@ class MediaPlayerManager {
     }
 
     fun play(audioFile: AudioFile) {
-        val player = audioFile.getPlayer()
-        setPlayingPlayer(player)
-        player?.play()
+        audioFile.onMedia {
+            val player = audioFile.getPlayer()
+            setPlayingPlayer(player)
+            player?.play()
+        }
     }
 
     fun play(audioLine: ParsedLine) {
@@ -36,7 +38,12 @@ class MediaPlayerManager {
         }
         player.seek(Duration(0.0))
         player.seek(Duration((from * 1000).toDouble()))
+        player.setStartTime(Duration((from * 1000).toDouble()))
         player.play()
+    }
+
+    fun stop() {
+        playingMediaPlayer?.stop()
     }
 
     companion object {

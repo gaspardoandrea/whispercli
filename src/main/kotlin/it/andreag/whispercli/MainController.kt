@@ -36,6 +36,8 @@ import java.util.*
 
 
 class MainController : Initializable, ListChangeListener<AudioFile>, PropertyChangeListener, ThreadEventListener {
+    lateinit var stopAudioFileMenuItem: Button
+    lateinit var stopAudioFileItem: MenuItem
     lateinit var selectedModelLabel: Label
     lateinit var toggleCheckOnStartup: CheckMenuItem
     lateinit var stackPane: StackPane
@@ -373,6 +375,10 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
 
     fun playAudioFile() {
         MediaPlayerManager.getInstance().play(getSelectedFile())
+    }
+
+    fun stopAudioFile() {
+        MediaPlayerManager.getInstance().stop()
     }
 
     override fun propertyChange(evt: PropertyChangeEvent?) {

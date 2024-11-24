@@ -15,72 +15,78 @@
             fx:id="mainPane">
     <top>
         <MenuBar>
-            <Menu mnemonicParsing="false" text="%file">
-                <MenuItem mnemonicParsing="false" accelerator="ctrl+a" text="%addAudioFile" onAction="#addAudioFile">
+            <Menu text="%menuFile">
+                <MenuItem accelerator="ctrl+a" text="%menuAddAudioFile" onAction="#addAudioFile">
                     <graphic>
                         <FontIcon iconLiteral="mdi2b-book-plus-multiple" iconSize="20"/>
                     </graphic>
                 </MenuItem>
                 <SeparatorMenuItem/>
-                <MenuItem mnemonicParsing="false" accelerator="ctrl+q" text="%exit" onAction="#exitApp">
+                <MenuItem accelerator="ctrl+q" text="%menuExit" onAction="#exitApp">
                     <graphic>
                         <FontIcon iconLiteral="mdi2e-exit-to-app" iconSize="20"/>
                     </graphic>
                 </MenuItem>
             </Menu>
-            <Menu mnemonicParsing="false" text="%edit">
-                <MenuItem mnemonicParsing="false" text="%updateDescription" onAction="#updateDescription" disable="true"
+            <Menu text="%menuEdit">
+                <MenuItem text="%menuUpdateDescription" onAction="#updateDescription" disable="true"
                           fx:id="setDescriptionItem">
                     <graphic>
                         <FontIcon iconLiteral="mdi2r-rename-box" iconSize="20"/>
                     </graphic>
                 </MenuItem>
-                <MenuItem mnemonicParsing="false" text="%remove" accelerator="ctrl+r" onAction="#removeFiles"
+                <MenuItem text="%menuRemove" accelerator="ctrl+r" onAction="#removeFiles"
                           disable="true" fx:id="removeItem">
                     <graphic>
                         <FontIcon iconLiteral="mdi2f-file-remove" iconSize="20"/>
                     </graphic>
                 </MenuItem>
-                <MenuItem mnemonicParsing="false" text="%transcribe" onAction="#transcribeFiles" disable="true"
+                <MenuItem text="%menuTranscribe" onAction="#transcribeFiles" disable="true"
                           fx:id="transcribeFilesItem">
                     <graphic>
                         <FontIcon iconLiteral="mdi2c-contain-start" iconSize="20"/>
                     </graphic>
                 </MenuItem>
-                <MenuItem mnemonicParsing="false" text="%reset" onAction="#resetFiles" disable="true"
+                <MenuItem text="%menuReset" onAction="#resetFiles" disable="true"
                           fx:id="resetFilesItem">
                     <graphic>
                         <FontIcon iconLiteral="mdi2r-reload-alert" iconSize="20"/>
                     </graphic>
                 </MenuItem>
             </Menu>
-            <Menu mnemonicParsing="false" text="%transcription">
-                <MenuItem mnemonicParsing="false" text="%play" onAction="#playAudioFile" disable="true"
+            <Menu text="%menuAudio">
+                <MenuItem text="%menuPlay" onAction="#playAudioFile" disable="true"
                           fx:id="playAudioFileItem">
                     <graphic>
                         <FontIcon iconLiteral="mdi2m-motion-play" iconSize="20"/>
                     </graphic>
                 </MenuItem>
-                <Menu text="%model">
-                    <fx:define>
-                        <ToggleGroup fx:id="model"/>
-                    </fx:define>
-                    <RadioMenuItem toggleGroup="$model" fx:id="modelTiny" text="%tiny" onAction="#modelSelected"/>
-                    <RadioMenuItem toggleGroup="$model" fx:id="modelBase" text="%base" onAction="#modelSelected"/>
-                    <RadioMenuItem toggleGroup="$model" fx:id="modelSmall" text="%small" onAction="#modelSelected"/>
-                    <RadioMenuItem toggleGroup="$model" fx:id="modelMedium" text="%medium" onAction="#modelSelected"/>
-                    <RadioMenuItem toggleGroup="$model" fx:id="modelLarge" text="%large" onAction="#modelSelected"/>
-                    <RadioMenuItem toggleGroup="$model" fx:id="modelTurbo" text="%turbo" onAction="#modelSelected"/>
-                </Menu>
+                <MenuItem text="%menuStop" onAction="#stopAudioFile"
+                          fx:id="stopAudioFileItem">
+                    <graphic>
+                        <FontIcon iconLiteral="mdi2s-stop-circle-outline" iconSize="20"/>
+                    </graphic>
+                </MenuItem>
             </Menu>
-            <Menu mnemonicParsing="false" text="%help">
-                <MenuItem mnemonicParsing="false" text="%checkWhisperSetup" disable="true"
+            <Menu text="%menuModel">
+                <fx:define>
+                    <ToggleGroup fx:id="model"/>
+                </fx:define>
+                <RadioMenuItem toggleGroup="$model" fx:id="modelTiny" text="%tiny" onAction="#modelSelected"/>
+                <RadioMenuItem toggleGroup="$model" fx:id="modelBase" text="%base" onAction="#modelSelected"/>
+                <RadioMenuItem toggleGroup="$model" fx:id="modelSmall" text="%small" onAction="#modelSelected"/>
+                <RadioMenuItem toggleGroup="$model" fx:id="modelMedium" text="%medium" onAction="#modelSelected"/>
+                <RadioMenuItem toggleGroup="$model" fx:id="modelLarge" text="%large" onAction="#modelSelected"/>
+                <RadioMenuItem toggleGroup="$model" fx:id="modelTurbo" text="%turbo" onAction="#modelSelected"/>
+            </Menu>
+            <Menu text="%menuHelp">
+                <MenuItem text="%checkWhisperSetup" disable="true"
                           onAction="#checkWhisperSetup" fx:id="checkWhisperSetupMenuItem">
                     <graphic>
                         <FontIcon iconLiteral="mdi2u-update" iconSize="20"/>
                     </graphic>
                 </MenuItem>
-                <MenuItem mnemonicParsing="false" text="%updateWhisperComponents" disable="true"
+                <MenuItem text="%updateWhisperComponents" disable="true"
                           onAction="#updateWhisperSetup" fx:id="updateWhisperSetupMenuItem">
                     <graphic>
                         <FontIcon iconLiteral="mdi2t-toy-brick-plus" iconSize="20"/>
@@ -91,7 +97,7 @@
                                fx:id="toggleCheckOnStartup"
                                onAction="#toggleCheckOnStartup"/>
                 <SeparatorMenuItem/>
-                <MenuItem mnemonicParsing="false" text="%aboutWhisperCli" onAction="#showAboutPopup" accelerator="ctrl+h">
+                <MenuItem text="%aboutWhisperCli" onAction="#showAboutPopup" accelerator="ctrl+h">
                     <graphic>
                         <FontIcon iconLiteral="mdi2h-help-box" iconSize="20"/>
                     </graphic>
@@ -103,7 +109,7 @@
         <BorderPane>
             <top>
                 <ToolBar>
-                    <Button mnemonicParsing="false" onAction="#addAudioFile">
+                    <Button onAction="#addAudioFile">
                         <tooltip>
                             <Tooltip text="%addAudioFile"/>
                         </tooltip>
@@ -112,15 +118,7 @@
                         </graphic>
                     </Button>
                     <Separator/>
-                    <Button mnemonicParsing="false" onAction="#playAudioFile" fx:id="playAudioFileMenuItem">
-                        <tooltip>
-                            <Tooltip text="%play"/>
-                        </tooltip>
-                        <graphic>
-                            <FontIcon iconLiteral="mdi2m-motion-play" iconSize="24"/>
-                        </graphic>
-                    </Button>
-                    <Button mnemonicParsing="false" onAction="#updateDescription" fx:id="setDescriptionButton"
+                    <Button onAction="#updateDescription" fx:id="setDescriptionButton"
                             disable="true">
                         <tooltip>
                             <Tooltip text="%updateDescription"/>
@@ -129,7 +127,7 @@
                             <FontIcon iconLiteral="mdi2r-rename-box" iconSize="24"/>
                         </graphic>
                     </Button>
-                    <Button mnemonicParsing="false" onAction="#removeFiles" fx:id="removeItemButton" disable="true">
+                    <Button onAction="#removeFiles" fx:id="removeItemButton" disable="true">
                         <tooltip>
                             <Tooltip text="%remove"/>
                         </tooltip>
@@ -137,7 +135,7 @@
                             <FontIcon iconLiteral="mdi2f-file-remove" iconSize="24"/>
                         </graphic>
                     </Button>
-                    <Button mnemonicParsing="false" onAction="#transcribeFiles" fx:id="transcribeFilesButton"
+                    <Button onAction="#transcribeFiles" fx:id="transcribeFilesButton"
                             disable="true">
                         <tooltip>
                             <Tooltip text="%transcribe"/>
@@ -146,7 +144,7 @@
                             <FontIcon iconLiteral="mdi2c-contain-start" iconSize="24"/>
                         </graphic>
                     </Button>
-                    <Button mnemonicParsing="false" onAction="#resetFiles" fx:id="resetFilesButton" disable="true">
+                    <Button onAction="#resetFiles" fx:id="resetFilesButton" disable="true">
                         <tooltip>
                             <Tooltip text="%reset"/>
                         </tooltip>
@@ -155,7 +153,7 @@
                         </graphic>
                     </Button>
                     <Separator/>
-                    <Button mnemonicParsing="false" onAction="#exitApp">
+                    <Button onAction="#exitApp">
                         <tooltip>
                             <Tooltip text="%exit"/>
                         </tooltip>
@@ -173,49 +171,73 @@
             </top>
             <center>
                 <SplitPane fx:id="splitPane">
-                    <AudioListView fx:id="listView"
-                        onDragDropped="#handleDragDropped"
-                        onDragOver="#handleDragOver">
-                        <contextMenu>
-                            <ContextMenu fx:id="contextMenu">
-                                <items>
-                                    <MenuItem mnemonicParsing="false" text="%play" onAction="#playAudioFile"
-                                              disable="true" fx:id="playAudioFileCtx">
-                                        <graphic>
-                                            <FontIcon iconLiteral="mdi2m-motion-play" iconSize="20"/>
-                                        </graphic>
-                                    </MenuItem>
-                                    <SeparatorMenuItem/>
-                                    <MenuItem mnemonicParsing="false" text="%transcribe" onAction="#transcribeFiles"
-                                              disable="true" fx:id="transcribeFilesItemCtx">
-                                        <graphic>
-                                            <FontIcon iconLiteral="mdi2c-contain-start" iconSize="20"/>
-                                        </graphic>
-                                    </MenuItem>
-                                    <MenuItem mnemonicParsing="false" text="%remove" onAction="#removeFiles"
-                                              disable="true" fx:id="removeItemCtx">
-                                        <graphic>
-                                            <FontIcon iconLiteral="mdi2f-file-remove" iconSize="20"/>
-                                        </graphic>
-                                    </MenuItem>
-                                    <MenuItem mnemonicParsing="false" text="%reset" onAction="#resetFiles" disable="true"
-                                              fx:id="resetFilesItemCtx">
-                                        <graphic>
-                                            <FontIcon iconLiteral="mdi2r-reload-alert" iconSize="20"/>
-                                        </graphic>
-                                    </MenuItem>
-                                    <SeparatorMenuItem/>
-                                    <MenuItem mnemonicParsing="false" text="%updateDescription"
-                                              onAction="#updateDescription" disable="true"
-                                              fx:id="setDescriptionItemCtx">
-                                        <graphic>
-                                            <FontIcon iconLiteral="mdi2r-rename-box" iconSize="20"/>
-                                        </graphic>
-                                    </MenuItem>
-                                </items>
-                            </ContextMenu>
-                        </contextMenu>
-                    </AudioListView>
+                    <BorderPane>
+                        <center>
+                            <AudioListView fx:id="listView"
+                                           onDragDropped="#handleDragDropped"
+                                           onDragOver="#handleDragOver">
+                                <contextMenu>
+                                    <ContextMenu fx:id="contextMenu">
+                                        <items>
+                                            <MenuItem text="%play" onAction="#playAudioFile"
+                                                      disable="true" fx:id="playAudioFileCtx">
+                                                <graphic>
+                                                    <FontIcon iconLiteral="mdi2m-motion-play" iconSize="20"/>
+                                                </graphic>
+                                            </MenuItem>
+                                            <SeparatorMenuItem/>
+                                            <MenuItem text="%transcribe" onAction="#transcribeFiles"
+                                                      disable="true" fx:id="transcribeFilesItemCtx">
+                                                <graphic>
+                                                    <FontIcon iconLiteral="mdi2c-contain-start" iconSize="20"/>
+                                                </graphic>
+                                            </MenuItem>
+                                            <MenuItem text="%remove" onAction="#removeFiles"
+                                                      disable="true" fx:id="removeItemCtx">
+                                                <graphic>
+                                                    <FontIcon iconLiteral="mdi2f-file-remove" iconSize="20"/>
+                                                </graphic>
+                                            </MenuItem>
+                                            <MenuItem text="%reset" onAction="#resetFiles" disable="true"
+                                                      fx:id="resetFilesItemCtx">
+                                                <graphic>
+                                                    <FontIcon iconLiteral="mdi2r-reload-alert" iconSize="20"/>
+                                                </graphic>
+                                            </MenuItem>
+                                            <SeparatorMenuItem/>
+                                            <MenuItem text="%updateDescription"
+                                                      onAction="#updateDescription" disable="true"
+                                                      fx:id="setDescriptionItemCtx">
+                                                <graphic>
+                                                    <FontIcon iconLiteral="mdi2r-rename-box" iconSize="20"/>
+                                                </graphic>
+                                            </MenuItem>
+                                        </items>
+                                    </ContextMenu>
+                                </contextMenu>
+                            </AudioListView>
+                        </center>
+                        <bottom>
+                            <ToolBar>
+                                <Button onAction="#playAudioFile" fx:id="playAudioFileMenuItem">
+                                    <tooltip>
+                                        <Tooltip text="%play"/>
+                                    </tooltip>
+                                    <graphic>
+                                        <FontIcon iconLiteral="mdi2m-motion-play" iconSize="24"/>
+                                    </graphic>
+                                </Button>
+                                <Button onAction="#stopAudioFile" fx:id="stopAudioFileMenuItem">
+                                    <tooltip>
+                                        <Tooltip text="%stop"/>
+                                    </tooltip>
+                                    <graphic>
+                                        <FontIcon iconLiteral="mdi2s-stop-circle-outline" iconSize="24"/>
+                                    </graphic>
+                                </Button>
+                            </ToolBar>
+                        </bottom>
+                    </BorderPane>
                     <StackPane fx:id="stackPane">
                         <PanelNotStarted fx:id="currentFileInfo" visible="false"/>
                         <PanelStarted fx:id="currentFileInfoStarted" visible="false"/>
