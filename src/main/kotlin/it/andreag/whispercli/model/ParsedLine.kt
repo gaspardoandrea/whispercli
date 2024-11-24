@@ -1,5 +1,6 @@
 package it.andreag.whispercli.model
 
+import javafx.util.Duration
 import java.time.LocalTime
 
 class ParsedLine {
@@ -8,6 +9,7 @@ class ParsedLine {
     var text: String
     var valid: Boolean
     var audioFile: AudioFile
+    var audioLine: AudioLine?
 
     private constructor(line: String, audioFile: AudioFile) {
         val seq = matchResult(line)
@@ -17,11 +19,13 @@ class ParsedLine {
             to = LocalTime.parse("00:" + seq.elementAt(1).value)
             text = line.split("]  ").elementAt(1).trim()
             valid = true
+            audioLine = null
         } catch (_: Exception) {
             from = LocalTime.parse("00:00:00")
             to = LocalTime.parse("00:00:00")
             text = ""
             valid = false
+            audioLine = null
         }
     }
 
@@ -31,6 +35,7 @@ class ParsedLine {
         to = localTimeFromSec(line.end)
         text = line.text
         valid = true
+        audioLine = line
     }
 
     private fun localTimeFromSec(secs: Double): LocalTime {
@@ -61,5 +66,9 @@ class ParsedLine {
         fun fromAudioLine(audioLine: AudioLine, audioFile: AudioFile): ParsedLine {
             return ParsedLine(audioLine, audioFile)
         }
+    }
+
+    fun getFromDuration(): Duration {
+        return Duration(audioLine?.start?.toDouble()?.times(1000) ?: 0.0)
     }
 }

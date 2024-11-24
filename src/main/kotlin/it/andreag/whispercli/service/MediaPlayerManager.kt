@@ -30,18 +30,17 @@ class MediaPlayerManager {
         }
     }
 
-    fun play(audioLine: ParsedLine) {
-        val player = audioLine.audioFile.getPlayer()
+    fun play(parsedLine: ParsedLine) {
+        val player = parsedLine.audioFile.getPlayer()
         setPlayingPlayer(player)
         if (player == null) {
             return
         }
-        val from = audioLine.from.toSecondOfDay()
         if (player.status == MediaPlayer.Status.PLAYING) {
             player.stop()
         }
-        player.seek(Duration((from * 1000).toDouble()))
-        player.startTime = Duration((from * 1000).toDouble())
+        player.seek(parsedLine.getFromDuration())
+        player.startTime = parsedLine.getFromDuration()
         player.play()
     }
 
