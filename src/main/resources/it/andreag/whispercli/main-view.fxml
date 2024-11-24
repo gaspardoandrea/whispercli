@@ -173,7 +173,9 @@
             </top>
             <center>
                 <SplitPane fx:id="splitPane">
-                    <AudioListView fx:id="listView">
+                    <AudioListView fx:id="listView"
+                        onDragDropped="#handleDragDropped"
+                        onDragOver="#handleDragOver">
                         <contextMenu>
                             <ContextMenu fx:id="contextMenu">
                                 <items>

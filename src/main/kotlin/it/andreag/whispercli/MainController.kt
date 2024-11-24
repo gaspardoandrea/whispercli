@@ -21,6 +21,8 @@ import javafx.fxml.Initializable
 import javafx.scene.Scene
 import javafx.scene.control.*
 import javafx.scene.control.Alert.AlertType
+import javafx.scene.input.DragEvent
+import javafx.scene.input.TransferMode
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.StackPane
 import javafx.stage.FileChooser
@@ -142,17 +144,25 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
         val files = fileChooser.showOpenMultipleDialog(mainPane.scene.window) ?: return
 
         files.forEach {
-            val audioFile = AudioFile(it.absolutePath)
-            audioFile.addPropertyChangeListener(this)
-
-            if (listView.items.contains(audioFile)) {
-                return
-            }
-
-            listView.items.add(audioFile)
+            addAudioFileToList(it)
             AppPreferences.getInstance().setFileChooserLocation(it.parentFile)
         }
         refresh()
+    }
+
+    private fun addAudioFileToList(file: File?): Boolean {
+        if (file == null) {
+            return false
+        }
+        val audioFile = AudioFile(file.absolutePath)
+        audioFile.addPropertyChangeListener(this)
+
+        if (listView.items.contains(audioFile)) {
+            return true
+        }
+
+        listView.items.add(audioFile)
+        return false
     }
 
     private fun refreshEnabledActions() {
@@ -371,5 +381,21 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
 
     override fun onTaskListChanged() {
         refreshEnabledActions()
+    }
+
+    fun handleDragOver(event: DragEvent) {
+        if (event.gestureSource != this && event.dragboard.hasFiles()) {
+            event.acceptTransferModes(TransferMode.COPY, TransferMode.MOVE)
+        }
+        event.consume();
+    }
+
+    fun handleDragDropped(event: DragEvent) {
+        if (event.gestureSource != this && event.dragboard.hasFiles()) {
+            event.dragboard.files.forEach {
+                addAudioFileToList(it)
+            }
+        }
+        event.consume();
     }
 }

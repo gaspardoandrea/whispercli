@@ -17,7 +17,7 @@ class ParsedLine {
             to = LocalTime.parse("00:" + seq.elementAt(1).value)
             text = line.split("]  ").elementAt(1).trim()
             valid = true
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             from = LocalTime.parse("00:00:00")
             to = LocalTime.parse("00:00:00")
             text = ""
