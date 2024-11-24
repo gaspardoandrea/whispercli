@@ -21,8 +21,12 @@ class MediaPlayerManager {
     fun play(audioFile: AudioFile) {
         audioFile.onMedia {
             val player = audioFile.getPlayer()
-            setPlayingPlayer(player)
-            player?.play()
+            if (player != null) {
+                setPlayingPlayer(player)
+                player.seek(Duration(0.toDouble()))
+                player.startTime = Duration((0).toDouble())
+                player.play()
+            }
         }
     }
 
@@ -36,9 +40,8 @@ class MediaPlayerManager {
         if (player.status == MediaPlayer.Status.PLAYING) {
             player.stop()
         }
-        player.seek(Duration(0.0))
         player.seek(Duration((from * 1000).toDouble()))
-        player.setStartTime(Duration((from * 1000).toDouble()))
+        player.startTime = Duration((from * 1000).toDouble())
         player.play()
     }
 

@@ -16,8 +16,13 @@ class AudioListCell : ListCell<AudioFile>() {
             text = item.renderLabel()
             tooltip = Tooltip(item.renderTooltip())
 
-            val icon = FontIcon(item.getIcon() + ":24")
-            graphic = icon
+            val iconResource = item.getIcon()
+            if (iconResource != null) {
+                val icon = FontIcon(iconResource + ":24")
+                graphic = icon
+            } else {
+                graphic = null
+            }
         }
     }
 }

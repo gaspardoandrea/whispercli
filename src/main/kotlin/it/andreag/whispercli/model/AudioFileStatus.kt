@@ -1,13 +1,17 @@
 package it.andreag.whispercli.model
 
+import java.util.ResourceBundle
+
 enum class AudioFileStatus {
     New, Transcribing, Transcribed;
 
+    val bundle: ResourceBundle? = ResourceBundle.getBundle("it.andreag.whispercli.bundle")
+
     fun toIcon(): String {
         return when (this) {
-            New -> "mdi2f-format-clear"
-            Transcribing -> "mdi2b-book-open-page-variant-outline"
-            Transcribed -> "mdi2c-check-circle"
+            New -> bundle?.getString("iconStatusNew") ?: ""
+            Transcribing -> bundle?.getString("iconStatusTranscribing") ?: ""
+            Transcribed -> bundle?.getString("iconStatusTranscribed") ?: ""
         }
     }
 

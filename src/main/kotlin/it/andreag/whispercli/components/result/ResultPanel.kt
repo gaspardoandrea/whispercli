@@ -17,7 +17,6 @@ class ResultPanel : AudioFilePanel() {
                 return@addListener
             }
             newSelection.audioLine.audioFile.onMedia {
-                // TODO FAR FUNZIONARE
                 MediaPlayerManager.getInstance().play(newSelection.audioLine)
             }
         })
