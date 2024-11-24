@@ -9,6 +9,7 @@ import it.andreag.whispercli.events.ThreadEventListener
 import it.andreag.whispercli.model.AudioFile
 import it.andreag.whispercli.service.AppPreferences
 import it.andreag.whispercli.service.ApplicationPersistence
+import it.andreag.whispercli.service.MediaPlayerManager
 import it.andreag.whispercli.setup.Checker
 import it.andreag.whispercli.setup.ComponentsUpdater
 import javafx.application.Platform
@@ -73,6 +74,8 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
     lateinit var listView: AudioListView
     lateinit var mainPane: BorderPane
 
+    val bundle: ResourceBundle? = ResourceBundle.getBundle("it.andreag.whispercli.bundle")
+
     override fun initialize(url: URL?, resource: ResourceBundle?) {
         listView.setCellFactory { AudioListCell() }
         ApplicationPersistence.getInstance().loadStatus(listView)
@@ -123,7 +126,7 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
     }
 
     @FXML
-    fun closeApp() {
+    fun exitApp() {
         saveStatus()
         Platform.exit()
     }
@@ -180,7 +183,7 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
         currentFileInfo.isVisible = false
         panelMoreThanOne.isVisible = false
 
-        selectedModelLabel.text = AppPreferences.getInstance().getTranscriptionModel()
+        selectedModelLabel.text = bundle?.getString(AppPreferences.getInstance().getTranscriptionModel())
 
         updatePanels()
     }
@@ -335,6 +338,7 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
         val newWindow = Stage()
         newWindow.title = "About"
         val loader = FXMLLoader(javaClass.getResource("aboutWindow.fxml"))
+        loader.resources = bundle
         newWindow.scene = Scene(loader.load())
         loader.getController<AboutWindow>().stage = newWindow
         newWindow.isAlwaysOnTop = true
@@ -358,8 +362,7 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
     }
 
     fun playAudioFile() {
-        // TODO
-//        MediaPlayerManager.getInstance().play(getSelectedFile())
+        MediaPlayerManager.getInstance().play(getSelectedFile())
     }
 
     override fun propertyChange(evt: PropertyChangeEvent?) {

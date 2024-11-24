@@ -5,9 +5,11 @@ import it.andreag.whispercli.components.insets.BigInsets
 import it.andreag.whispercli.model.AudioFile
 import javafx.scene.text.Text
 import javafx.scene.text.TextFlow
+import java.util.ResourceBundle
 
 class PanelNotStarted : AudioFilePanel() {
     private var textFlow: TextFlow = TextFlow()
+    private val bundle: ResourceBundle? = ResourceBundle.getBundle("it.andreag.whispercli.bundle")
 
     init {
         center = textFlow
@@ -22,14 +24,14 @@ class PanelNotStarted : AudioFilePanel() {
             val text1 = Text(audioFile.file.name + br)
             text1.style = "-fx-font-weight: bold"
 
-            val text2 = Text("Duration: ")
+            val text2 = Text(bundle?.getString("duration") + ": ")
             val text3 = Text(audioFile.getFormattedDuration() + br)
             text3.style = "-fx-font-family: monospace"
 
             textFlow.children.addAll(text1, text2, text3)
             media?.tracks?.forEach {
                 textFlow.children.add(Text(br))
-                textFlow.children.add(Text("Track: "))
+                textFlow.children.add(Text(bundle?.getString("track") + ": "))
                 val trackId = Text(it.trackID.toString())
                 trackId.style = "-fx-font-family: monospace"
                 textFlow.children.add(trackId)

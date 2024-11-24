@@ -6,10 +6,14 @@ import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.scene.image.Image
 import javafx.stage.Stage
+import java.util.ResourceBundle
 
 class WhisperApplication : Application() {
     override fun start(stage: Stage) {
         val fxmlLoader = FXMLLoader(WhisperApplication::class.java.getResource("main-view.fxml"))
+        val bundle = ResourceBundle.getBundle("it.andreag.whispercli.bundle")
+        fxmlLoader.resources = bundle
+
         val size = AppPreferences.getInstance().getWindowSize()
         val scene = Scene(fxmlLoader.load(), size?.width ?: 800.0, size?.height ?: 600.0)
         val css = this.javaClass.getResource("stylesheet.css")?.toExternalForm()

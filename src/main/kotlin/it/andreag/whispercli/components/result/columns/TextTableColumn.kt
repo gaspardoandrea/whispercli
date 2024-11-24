@@ -4,10 +4,12 @@ import it.andreag.whispercli.components.result.TextTableCell
 import it.andreag.whispercli.model.TableAudioLine
 import javafx.beans.property.SimpleStringProperty
 import javafx.scene.control.TableColumn
+import java.util.ResourceBundle
 
 class TextTableColumn : TableColumn<TableAudioLine, String>() {
     init {
-        text = "Text"
+        val bundle: ResourceBundle? = ResourceBundle.getBundle("it.andreag.whispercli.bundle")
+        text = bundle?.getString("text")
         isResizable = false
         setCellValueFactory {
             SimpleStringProperty(it.value.getValueToShow())
