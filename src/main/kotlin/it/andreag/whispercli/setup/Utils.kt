@@ -1,8 +1,6 @@
 package it.andreag.whispercli.setup
 
 import it.andreag.whispercli.WhisperApplication
-import it.andreag.whispercli.service.AppPreferences
-import it.andreag.whispercli.model.AudioFile
 import mu.KotlinLogging
 import java.io.BufferedReader
 import java.io.File
@@ -67,46 +65,10 @@ class Utils {
         try {
             ProcessBuilder(getPythonBin(), "-V").start()
             return true
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             return false
         }
     }
-
-    private fun getPythonBin(): String {
-        return File(System.getProperty("user.home"), "AppData\\Local\\Programs\\Python\\Launcher\\py.exe").absolutePath
-    }
-
-    fun startTranscribeProcess(audioFile: AudioFile) {
-        try {
-            val transcriptionModel = AppPreferences.getInstance().getTranscriptionModel()
-
-            val pb = ProcessBuilder(
-                getPythonBin(),
-                "-m",
-                "whisper",
-                "--fp16",
-                "False",
-                "--language",
-                getLanguage(),
-                audioFile.filePath,
-                "--model",
-                transcriptionModel,
-                "--output_dir",
-                audioFile.getOutputDir(transcriptionModel).absolutePath
-            )
-            pb.redirectErrorStream(true)
-            val process = pb.start()
-            val processStdOutput = process.inputStream
-            processStdOutput.bufferedReader(Charsets.UTF_8).forEachLine {
-                println(it)
-                audioFile.updatePercentFromString(it)
-            }
-        } catch (e: Exception) {
-            logger.error { e }
-        }
-    }
-
-    private fun getLanguage() = "it"
 
     fun updateWhisper(): Boolean {
         try {
@@ -142,5 +104,13 @@ class Utils {
             instance ?: synchronized(this) {
                 instance ?: Utils().also { instance = it }
             }
+
+        fun getPythonBin(): String {
+            return File(
+                System.getProperty("user.home"),
+                "AppData\\Local\\Programs\\Python\\Launcher\\py.exe"
+            ).absolutePath
+        }
+
     }
 }

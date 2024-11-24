@@ -19,8 +19,9 @@ class ParsedLineTest {
 
     @Test
     fun matchResult() {
-        val l =
-            ParsedLine("[00:00.000 --> 00:11.040]  e ci ha raccontato del suo esperienza pressionale di perch? nasce l'associazione Atlantidee")
+        val string =
+            "[00:00.000 --> 00:11.040]  e ci ha raccontato del suo esperienza pressionale di perch? nasce l'associazione Atlantidee"
+        val l = ParsedLine.fromConsole(string, AudioFile("", ""))
         assertEquals(l.from, LocalTime.parse("00:00:00.000"))
         assertEquals(l.to, LocalTime.parse("00:00:11.040"))
         assertEquals(

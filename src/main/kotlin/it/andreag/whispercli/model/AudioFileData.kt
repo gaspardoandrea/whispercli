@@ -6,4 +6,5 @@ import kotlinx.serialization.Serializable
 data class AudioFileData(
     val text: String,
     val language: String,
-    val segments: List<AudioLine>)
+    val segments: List<AudioLine>
+)

@@ -70,6 +70,7 @@
                     <RadioMenuItem toggleGroup="$model" fx:id="modelSmall" text="Small" onAction="#modelSelected"/>
                     <RadioMenuItem toggleGroup="$model" fx:id="modelMedium" text="Medium" onAction="#modelSelected"/>
                     <RadioMenuItem toggleGroup="$model" fx:id="modelLarge" text="Large" onAction="#modelSelected"/>
+                    <RadioMenuItem toggleGroup="$model" fx:id="modelTurbo" text="Turbo" onAction="#modelSelected"/>
                 </Menu>
             </Menu>
             <Menu mnemonicParsing="false" text="Help">
@@ -85,6 +86,11 @@
                         <FontIcon iconLiteral="mdi2t-toy-brick-plus" iconSize="20"/>
                     </graphic>
                 </MenuItem>
+                <CheckMenuItem mnemonicParsing="false"
+                               text="Check whisper setup on startup"
+                               fx:id="toggleCheckOnStartup"
+                               onAction="#toggleCheckOnStartup"/>
+                <SeparatorMenuItem/>
                 <MenuItem mnemonicParsing="false" text="About" onAction="#showAboutPopup" accelerator="ctrl+h">
                     <graphic>
                         <FontIcon iconLiteral="mdi2h-help-box" iconSize="20"/>
@@ -157,6 +163,9 @@
                             <FontIcon iconLiteral="mdi2e-exit-to-app" iconSize="24"/>
                         </graphic>
                     </Button>
+                    <Separator/>
+                    <Label text="Model: "/>
+                    <Label fx:id="selectedModelLabel" style="-fx-font-weight: bold;"/>
                     <Separator/>
                     <Label fx:id="infoLabel"/>
                 </ToolBar>

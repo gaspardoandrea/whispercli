@@ -12,7 +12,6 @@ class ResultTable() : TableView<TableAudioLine>() {
     private val textCol: TextTableColumn = TextTableColumn()
     private val minuteCol: MinuteTableColumn = MinuteTableColumn()
     val dataList: ObservableList<TableAudioLine> = FXCollections.observableArrayList()
-        get() = field
 
     init {
         isEditable = true
@@ -22,7 +21,7 @@ class ResultTable() : TableView<TableAudioLine>() {
         columns.add(textCol)
 
         textCol.setOnEditCommit { t: TableColumn.CellEditEvent<TableAudioLine?, String?> ->
-            val item = t.getTableView().getItems().get(t.getTablePosition().getRow()) ?: return@setOnEditCommit
+            val item = t.getTableView().getItems().get(t.getTablePosition().row) ?: return@setOnEditCommit
             item.updatedText = t.newValue.toString()
         }
 

@@ -57,6 +57,14 @@ class AppPreferences private constructor() {
         return this.preferences.get("TranscriptionModel", "tiny")
     }
 
+    fun setCheckOnStartup(bool: Boolean) {
+        this.preferences.putBoolean("CheckOnStartup", bool)
+    }
+
+    fun checkOnStartup(): Boolean {
+        return this.preferences.getBoolean("CheckOnStartup", true)
+    }
+
     companion object {
         @Volatile
         private var instance: AppPreferences? = null

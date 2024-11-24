@@ -1,15 +1,14 @@
 package it.andreag.whispercli
 
 import it.andreag.whispercli.components.AudioListView
+import it.andreag.whispercli.components.result.ResultPanel
 import it.andreag.whispercli.components.stack.PanelNotStarted
 import it.andreag.whispercli.components.stack.PanelStarted
-import it.andreag.whispercli.components.result.ResultPanel
 import it.andreag.whispercli.events.ThreadDispatcher
 import it.andreag.whispercli.events.ThreadEventListener
+import it.andreag.whispercli.model.AudioFile
 import it.andreag.whispercli.service.AppPreferences
 import it.andreag.whispercli.service.ApplicationPersistence
-import it.andreag.whispercli.model.AudioFile
-import it.andreag.whispercli.service.MediaPlayerManager
 import it.andreag.whispercli.setup.Checker
 import it.andreag.whispercli.setup.ComponentsUpdater
 import javafx.application.Platform
@@ -34,6 +33,8 @@ import java.util.*
 
 
 class MainController : Initializable, ListChangeListener<AudioFile>, PropertyChangeListener, ThreadEventListener {
+    lateinit var selectedModelLabel: Label
+    lateinit var toggleCheckOnStartup: CheckMenuItem
     lateinit var stackPane: StackPane
     private val logger = KotlinLogging.logger {}
     lateinit var playAudioFileCtx: MenuItem
@@ -48,6 +49,7 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
     lateinit var modelSmall: RadioMenuItem
     lateinit var modelMedium: RadioMenuItem
     lateinit var modelLarge: RadioMenuItem
+    lateinit var modelTurbo: RadioMenuItem
     lateinit var panelMoreThanOne: ScrollPane
 
     /** Menu items */
@@ -79,12 +81,15 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
         ThreadDispatcher.getInstance().addListener(this)
 
         listView.selectionModel.selectedItems.addListener(this)
+        toggleCheckOnStartup.isSelected = AppPreferences.getInstance().checkOnStartup()
         val splitPosition = AppPreferences.getInstance().getSplitPosition()
         if (splitPosition != null) {
             splitPane.setDividerPosition(0, splitPosition)
         }
         SplitPane.setResizableWithParent(listView, false)
-        checkWhisperSetup(true)
+        if (AppPreferences.getInstance().checkOnStartup()) {
+            checkWhisperSetup(true)
+        }
         updateTranscriptionModel()
         selectFirstItem()
     }
@@ -102,6 +107,7 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
             "small" -> modelSmall
             "medium" -> modelMedium
             "large" -> modelLarge
+            "turbo" -> modelTurbo
             else -> modelTiny
         }.isSelected = true
     }
@@ -173,6 +179,9 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
         currentFileInfoStarted.isVisible = false
         currentFileInfo.isVisible = false
         panelMoreThanOne.isVisible = false
+
+        selectedModelLabel.text = AppPreferences.getInstance().getTranscriptionModel()
+
         updatePanels()
     }
 
@@ -315,6 +324,10 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
         val th = Thread(ComponentsUpdater(infoLabel))
         th.isDaemon = true
         th.start()
+    }
+
+    fun toggleCheckOnStartup() {
+        AppPreferences.getInstance().setCheckOnStartup(toggleCheckOnStartup.isSelected)
     }
 
     fun showAboutPopup() {

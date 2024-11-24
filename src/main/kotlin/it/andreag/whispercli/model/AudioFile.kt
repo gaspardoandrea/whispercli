@@ -3,6 +3,7 @@ package it.andreag.whispercli.model
 import it.andreag.whispercli.service.AppPreferences
 import it.andreag.whispercli.service.ApplicationPersistence
 import it.andreag.whispercli.service.MediaPlayerManager
+import javafx.application.Platform
 import javafx.scene.media.Media
 import javafx.scene.media.MediaPlayer
 import kotlinx.serialization.Serializable
@@ -160,7 +161,9 @@ data class AudioFile(
             val old = percent
             percent = ((now.toNanoOfDay().toDouble() / max.toNanoOfDay().toDouble()) * 100).toInt()
             parsedLines.add(l)
-            propertyChangeSupport?.firePropertyChange("text", old, percent)
+            Platform.runLater {
+                propertyChangeSupport?.firePropertyChange("text", old, percent)
+            }
         }
     }
 

@@ -51,8 +51,8 @@ c:\python312
 
 # Upgrade
 <blockquote>
-python -m pip install --upgrade pip
-pip install --upgrade --no-deps --force-reinstall git+https://github.com/openai/whisper.git
+py -m pip install --upgrade pip
+py -m pip install --upgrade --no-deps --force-reinstall git+https://github.com/openai/whisper.git
 </blockquote>
 
 # Run
