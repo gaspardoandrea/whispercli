@@ -13,14 +13,17 @@ import javafx.scene.control.ToolBar
 import javafx.scene.control.Tooltip
 import javafx.scene.layout.BorderPane
 import org.kordamp.ikonli.javafx.FontIcon
+import java.awt.Desktop
 import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import kotlin.math.max
 
+
 class Editor : BorderPane {
     private val textArea: TextArea = TextArea()
     private val saveButton: Button = Button()
+    private val toWordButton: Button = Button()
     private val bundle: ResourceBundle? = ResourceBundle.getBundle("it.andreag.whispercli.bundle")
     private var currentRow: ParsedLine? = null
     private var lines: ArrayList<ParsedLine>? = null
@@ -28,14 +31,22 @@ class Editor : BorderPane {
 
     constructor() : super() {
         val toolbar = ToolBar()
+
         val saveIcon = FontIcon()
         saveIcon.iconLiteral = bundle?.getString("iconSave")
         saveIcon.iconSize = 24
         saveButton.isDisable = true
-
-        toolbar.items.add(saveButton)
         saveButton.tooltip = Tooltip(bundle?.getString("save"))
         saveButton.graphic = saveIcon
+
+        val toWord = FontIcon()
+        toWord.iconLiteral = bundle?.getString("iconToWord")
+        toWord.iconSize = 24
+        toWordButton.tooltip = Tooltip(bundle?.getString("toWord"))
+        toWordButton.graphic = toWord
+
+        toolbar.items.add(saveButton)
+        toolbar.items.add(toWordButton)
 
         top = toolbar
         textArea.isWrapText = true
@@ -50,6 +61,9 @@ class Editor : BorderPane {
 
         saveButton.onAction = EventHandler<javafx.event.ActionEvent> {
             saveEditor()
+        }
+        toWordButton.onAction = EventHandler<javafx.event.ActionEvent> {
+            openInEditor()
         }
 
         textArea.caretPositionProperty().addListener(ChangeListener { observable, oldValue, newValue ->
@@ -67,6 +81,16 @@ class Editor : BorderPane {
                 MediaPlayerManager.getInstance().play(newParsedLine)
             }
         })
+    }
+
+    private fun openInEditor() {
+        val desktop = if (Desktop.isDesktopSupported()) Desktop.getDesktop() else null
+        if (desktop != null && desktop.isSupported(Desktop.Action.OPEN)) {
+            audioFile?.saveFromEditor(textArea.text)
+            desktop.open(audioFile!!.getEditedTextFile(AppPreferences.getInstance().getTranscriptionModel()))
+        } else {
+            throw UnsupportedOperationException("Open action not supported")
+        }
     }
 
     private fun saveEditor() {

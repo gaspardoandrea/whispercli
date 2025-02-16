@@ -222,6 +222,10 @@ data class AudioFile(
         return File(getOutputDir(transcriptionModel), getFileNameWithExt("json", "-edit"))
     }
 
+    public fun getEditedTextFile(transcriptionModel: String): File {
+        return File(getOutputDir(transcriptionModel), getFileNameWithExt("txt", "-edit"))
+    }
+
     private fun loadEditedLinesFromSource(): ArrayList<ParsedLine> {
         editedLines.clear()
         sourceParsedLines.forEach { editedLines.add(ParsedLine.fromSourceParsedLine(it)) }
@@ -277,9 +281,47 @@ data class AudioFile(
             }
         }
 
-        val editedFile = getEditedFile(AppPreferences.getInstance().getTranscriptionModel())
         val json = Json.encodeToString(rows)
+        val editedFile = getEditedFile(AppPreferences.getInstance().getTranscriptionModel())
         editedFile.writeText(json)
+        val editedTxtFile = getEditedTextFile(AppPreferences.getInstance().getTranscriptionModel())
+        editedTxtFile.writeText(getFormattedText(rows))
         loadEditedFile(editedFile)
+    }
+
+    private fun getFormattedText(rows: ArrayList<SerializableRow>): String {
+        val sb = StringBuilder()
+        rows.forEach { sb.append(it.text).append("\n") }
+        return normalizeText(sb.trim().toString())
+    }
+
+    fun normalizeText(text: String): String
+    {
+        var text = text.replace("<", "«")
+        text = text.replace(">", "»")
+        text = text.replace("»»", "»")
+        text = text.replace("»»", "»")
+        text = text.replace("««", "«")
+        text = text.replace("««", "«")
+
+        text = text.replace(" - ", " – ")
+        text = text.replace(" -,", " –,")
+        text = text.replace("-\n\n", "")
+        text = text.replace(Regex("([a-zàèéòìù),\"])\\n\\n?\\s?([a-z])"), "$1 $2")
+        text = text.replace(Regex("\n+"), "\n\n")
+        text = text.replace("- ", "")
+        text = text.replace("...", "…")
+        text = text.replace(" … ", "… ")
+
+
+        text = text.replace("\n\n", ".\n\n")
+        text = text.replace("..\n\n", ".\n\n")
+        text = text.replace("?.\n\n", "?\n\n")
+        text = text.replace("!.\n\n", "!\n\n")
+
+        text = text.replace(Regex(" +"), " ")
+//        text = text.replace(Regex("/^\s+|\s+$/m", "\n", $text);
+
+        return text
     }
 }
