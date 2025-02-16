@@ -11,6 +11,8 @@ import kotlinx.serialization.Transient
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.security.MessageDigest
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 
 @Serializable
@@ -39,7 +41,10 @@ data class AudioFile(
     var percent: Int? = null
 
     @Transient
-    val parsedLines: ArrayList<ParsedLine> = ArrayList()
+    val sourceParsedLines: ArrayList<SourceParsedLine> = ArrayList()
+
+    @Transient
+    val editedLines: ArrayList<ParsedLine> = ArrayList()
 
     init {
         super.setObservableObject(this)
@@ -87,7 +92,7 @@ data class AudioFile(
         currentThread = Thread(WhisperProcess(this))
         currentThread!!.isDaemon = true
         currentThread!!.start()
-        parsedLines.clear()
+        sourceParsedLines.clear()
         updateStatus()
     }
 
@@ -141,8 +146,8 @@ data class AudioFile(
         return getFileNameWithExt("txt")
     }
 
-    private fun getFileNameWithExt(ext: String): String {
-        return getFileNameWithout() + "." + ext
+    private fun getFileNameWithExt(ext: String, postFix: String = ""): String {
+        return getFileNameWithout() + postFix + "." + ext
     }
 
     private fun getFileNameWithout(): String {
@@ -151,16 +156,16 @@ data class AudioFile(
 
     fun updatePercentFromString(line: String) {
         onMedia {
-            val l = ParsedLine.fromConsole(line, this)
+            val l = SourceParsedLine.fromConsole(line, this)
             if (!l.valid) {
                 return@onMedia
             }
             val media = getMedia()
             val now = l.to
-            val max = ParsedLine.timeFromMs(media?.duration.toString())
+            val max = SourceParsedLine.timeFromMs(media?.duration.toString())
             val old = percent
             percent = ((now.toNanoOfDay().toDouble() / max.toNanoOfDay().toDouble()) * 100).toInt()
-            parsedLines.add(l)
+            sourceParsedLines.add(l)
             Platform.runLater {
                 propertyChangeSupport?.firePropertyChange("text", old, percent)
             }
@@ -194,15 +199,87 @@ data class AudioFile(
     }
 
     fun loadParsedLines(transcriptionModel: String) {
-        parsedLines.clear()
+        sourceParsedLines.clear()
         val indexFile = File(getOutputDir(transcriptionModel), getFileNameWithExt("json"))
+        val editedFile = getEditedFile(transcriptionModel)
         if (!indexFile.exists()) {
             return
         }
         val json = indexFile.readText()
         val audio = Json.decodeFromString<AudioFileData>(json)
         audio.segments.forEach {
-            parsedLines.add(ParsedLine.fromAudioLine(it, this))
+            sourceParsedLines.add(SourceParsedLine.fromAudioLine(it, this))
         }
+        if (editedFile.exists()) {
+            loadEditedFile(editedFile)
+        } else {
+            loadEditedLinesFromSource()
+            saveEditedFile(editedFile)
+        }
+    }
+
+    private fun getEditedFile(transcriptionModel: String): File {
+        return File(getOutputDir(transcriptionModel), getFileNameWithExt("json", "-edit"))
+    }
+
+    private fun loadEditedLinesFromSource(): ArrayList<ParsedLine> {
+        editedLines.clear()
+        sourceParsedLines.forEach { editedLines.add(ParsedLine.fromSourceParsedLine(it)) }
+        return editedLines
+    }
+
+    private fun saveEditedFile(
+        file: File
+    ) {
+        val json = Json.encodeToString(toJson())
+        file.writeText(json)
+    }
+
+    private fun loadEditedFile(file: File) {
+        editedLines.clear()
+        var json: ArrayList<SerializableRow>
+        var jsonText: String = file.readText()
+
+        json = Json.decodeFromString(jsonText)
+        json.forEach { editedLines.add(ParsedLine.fromSerialized(it, this)) }
+    }
+
+    fun toJson(): ArrayList<SerializableRow> {
+        var rv = ArrayList<SerializableRow>()
+        editedLines.forEach {
+            val o = SerializableRow(
+                it.from.toString(),
+                it.to.toString(),
+                it.text
+            )
+            rv.add(o)
+        }
+        return rv
+    }
+
+    fun saveFromEditor(text: String) {
+        var rows = ArrayList<SerializableRow>()
+        val pattern: Pattern = Pattern.compile("\\d+:\\d+:\\d+\\.\\d+ \\d+:\\d+:\\d+\\.\\d+")
+        val split = pattern.splitWithDelimiters(text, -1)
+        var delimiter: String? = null
+        split.forEach {
+            if (it.trim() == "") {
+                return@forEach
+            }
+            if (pattern.matcher(it).matches()) {
+                delimiter = it
+            } else {
+                val fromTo = delimiter?.split(" ")
+                rows.add(SerializableRow(
+                    fromTo?.get(0) ?: "",
+                    fromTo?.get(1) ?: "",
+                    it.trim()))
+            }
+        }
+
+        val editedFile = getEditedFile(AppPreferences.getInstance().getTranscriptionModel())
+        val json = Json.encodeToString(rows)
+        editedFile.writeText(json)
+        loadEditedFile(editedFile)
     }
 }

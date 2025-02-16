@@ -4,84 +4,86 @@ import javafx.util.Duration
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-class ParsedLine {
+open class ParsedLine {
     var from: LocalTime
     var to: LocalTime
     var text: String
-    var valid: Boolean
     var audioFile: AudioFile
-    var audioLine: AudioLine?
 
-    private constructor(line: String, audioFile: AudioFile) {
+    protected constructor(audioFile: AudioFile) {
+        from = LocalTime.parse("00:00:00")
+        to = LocalTime.parse("00:00:00")
+        text = ""
+        this.audioFile = audioFile
+    }
+
+    private constructor(sourceParsedLine: SourceParsedLine) {
+        this.from = sourceParsedLine.from
+        this.to = sourceParsedLine.to
+        this.text = sourceParsedLine.text.trim()
+        this.audioFile = sourceParsedLine.audioFile
+    }
+
+    private constructor(serializableRow: SerializableRow, audioFile: AudioFile) {
+        this.from = LocalTime.parse(serializableRow.from)
+        this.to = LocalTime.parse(serializableRow.to)
+        this.text = serializableRow.text
+        this.audioFile = audioFile
+    }
+
+    protected constructor(line: String, audioFile: AudioFile) {
         val seq = matchResult(line)
         this.audioFile = audioFile
         try {
             from = LocalTime.parse("00:" + seq.elementAt(0).value)
             to = LocalTime.parse("00:" + seq.elementAt(1).value)
             text = line.split("]  ").elementAt(1).trim()
-            valid = true
-            audioLine = null
         } catch (_: Exception) {
             from = LocalTime.parse("00:00:00")
             to = LocalTime.parse("00:00:00")
             text = ""
-            valid = false
-            audioLine = null
         }
     }
 
-    private constructor(line: AudioLine, audioFile: AudioFile) {
-        this.audioFile = audioFile
-        from = localTimeFromSec(line.start)
-        to = localTimeFromSec(line.end)
-        text = line.text
-        valid = true
-        audioLine = line
-    }
-
-    private fun localTimeFromSec(secs: Double): LocalTime {
+    protected fun localTimeFromSec(secs: Double): LocalTime {
         val t = LocalTime.of(0, 0, 0, 0)
 
         return t.plusNanos(secs.times(1000000000).toLong())
     }
 
-    private fun matchResult(line: String) = Regex("([0-9][0-9]:[0-9][0-9].[0-9][0-9][0-9])").findAll(line)
+    protected fun matchResult(line: String) = Regex("([0-9][0-9]:[0-9][0-9].[0-9][0-9][0-9])").findAll(line)
 
     companion object {
-        fun appendHours(line: String): String {
-            return if (line.count { it == ':' } == 1) {
-                "00:$line"
-            } else {
-                line
-            }
+        fun fromSourceParsedLine(line: SourceParsedLine): ParsedLine {
+            return ParsedLine(line)
         }
 
-        fun timeFromMs(ms: String): LocalTime {
-            return LocalTime.parse("00:00:00").plusNanos((ms.replace(" ms", "").toDouble() * 1000000).toLong())
+        fun fromSerialized(row: SerializableRow, audioFile: AudioFile): ParsedLine {
+            return ParsedLine(row, audioFile)
         }
-
-        fun fromConsole(text: String, audioFile: AudioFile): ParsedLine {
-            return ParsedLine(text, audioFile)
-        }
-
-        fun fromAudioLine(audioLine: AudioLine, audioFile: AudioFile): ParsedLine {
-            return ParsedLine(audioLine, audioFile)
-        }
-    }
-
-    fun getFromDuration(): Duration {
-        return Duration(audioLine?.start?.toDouble()?.times(1000) ?: 0.0)
     }
 
     fun toEditorString(): String {
-        val dtf = DateTimeFormatter.ofPattern("HH:mm:ss.S");
+        val dtf = DateTimeFormatter.ofPattern("HH:mm:ss.S")
         return from.format(dtf) + " " + to.format(dtf) + " " + text
     }
 
     fun getLineDuration(): Long {
         // FIXME c'è qualcosa che no va qui
-        val end = audioLine?.end?.toDouble()?.plus(1.2)
-        val start = audioLine?.start?.toDouble()
-        return (end?.minus(start ?: 0.0)?.toLong() ?: 0) * 1000
+        val ltTo = localTimeToMillis(to)
+        val ltFrom = localTimeToMillis(from)
+        return ltTo - ltFrom + 1200
+    }
+
+    private fun localTimeToMillis(lt: LocalTime): Long {
+        return (lt.hour * 3600 + lt.minute * 60 + lt.second) * 1000 + (lt.nano / 1000000).toLong()
+    }
+
+    fun getFromDuration(): Duration {
+        return Duration(localTimeToMillis(from).toDouble())
+    }
+
+    fun equalsTo(line: ParsedLine): Boolean {
+        return line.text == text
     }
 }

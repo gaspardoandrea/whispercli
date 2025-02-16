@@ -10,7 +10,7 @@ import java.util.*
 class MediaPlayerManager {
     private var playingMediaPlayer: MediaPlayer? = null
     var stopTimer: Timer = Timer()
-    var timerTask : TimerTask? = null
+    var timerTask: TimerTask? = null
 
     fun getPlayerFor(media: Media): MediaPlayer {
         return MediaPlayer(media)
@@ -53,7 +53,9 @@ class MediaPlayerManager {
 
         timerTask = object : TimerTask() {
             override fun run() {
-                player.stop()
+                if (player.status == MediaPlayer.Status.PLAYING) {
+                    player.stop()
+                }
             }
         }
         stopTimer.schedule(timerTask, parsedLine.getLineDuration())

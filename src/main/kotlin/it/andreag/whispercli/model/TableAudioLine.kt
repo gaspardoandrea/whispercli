@@ -1,6 +1,6 @@
 package it.andreag.whispercli.model
 
-class TableAudioLine(pl: ParsedLine) {
+class TableAudioLine(pl: SourceParsedLine) {
     fun getValueToShow(): String? {
         return if (updatedText == null) {
             audioLine.text.trim()
@@ -10,5 +10,5 @@ class TableAudioLine(pl: ParsedLine) {
     }
 
     var updatedText: String? = null
-    val audioLine: ParsedLine = pl
+    val audioLine: SourceParsedLine = pl
 }
