@@ -1,11 +1,11 @@
 plugins {
     id 'java'
     id 'application'
-    id 'org.jetbrains.kotlin.jvm' version '2.0.0'
+    id 'org.jetbrains.kotlin.jvm' version '2.1.10'
     id 'org.javamodularity.moduleplugin' version '1.8.15'
     id 'org.openjfx.javafxplugin' version '0.1.0'
-    id 'org.beryx.jlink' version '3.0.1'
-    id 'org.jetbrains.kotlin.plugin.serialization' version "2.0.0"
+    id 'org.beryx.jlink' version '3.1.1'
+    id 'org.jetbrains.kotlin.plugin.serialization' version "2.1.10"
 }
 
 group 'it.andreag'
@@ -31,26 +31,27 @@ application {
     mainClass = 'it.andreag.whispercli.WhisperApplication'
 }
 kotlin {
-    jvmToolchain(22)
+    jvmToolchain(23)
 }
 
 javafx {
-    version = '22-ea+11'
+    version = '23.0.2'
     modules = ['javafx.controls', 'javafx.fxml']
 }
 
 dependencies {
-    implementation('org.controlsfx:controlsfx:11.1.2')
+    implementation('org.slf4j:slf4j-api:2.0.16')
+    implementation('org.slf4j:slf4j-simple:2.0.16')
+    implementation('org.controlsfx:controlsfx:11.2.1')
     implementation('org.kordamp.ikonli:ikonli-javafx:12.3.1')
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
     implementation('org.kordamp.ikonli:ikonli-bootstrapicons-pack:12.3.1')
-    implementation('org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3')
-    implementation('org.slf4j:slf4j-api:1.7.25')
-    implementation('org.slf4j:slf4j-simple:1.7.25')
-    implementation 'io.github.microutils:kotlin-logging-jvm:2.0.11'
-    implementation('org.openjfx:javafx-media:23-ea+22')
-    implementation('commons-codec:commons-codec:1.17.0')
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
+    implementation('org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0')
+    implementation('org.openjfx:javafx-media:25-ea+2')
+    implementation('commons-codec:commons-codec:1.18.0')
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
+    implementation("org.jfxtras:jmetro:11.6.16")
+    implementation('io.github.microutils:kotlin-logging-jvm:3.0.5')
 
     testImplementation('org.jetbrains.kotlin:kotlin-test')
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")

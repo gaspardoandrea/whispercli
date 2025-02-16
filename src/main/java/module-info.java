@@ -12,7 +12,9 @@ module it.andreag.whispercli {
     requires kotlinx.serialization.core;
     requires kotlinx.serialization.json;
     requires org.apache.commons.codec;
-    requires kotlin.logging.jvm;
+    requires io.github.microutils.kotlinlogging;
+    requires org.slf4j;
+    requires org.slf4j.simple;
 
     opens it.andreag.whispercli to javafx.fxml;
     opens it.andreag.whispercli.components to javafx.fxml;
