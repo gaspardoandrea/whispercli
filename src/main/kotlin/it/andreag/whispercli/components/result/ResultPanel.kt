@@ -4,6 +4,7 @@ import it.andreag.whispercli.components.AudioFilePanel
 import it.andreag.whispercli.components.insets.BigInsets
 import it.andreag.whispercli.model.AudioFile
 import it.andreag.whispercli.model.TableAudioLine
+import it.andreag.whispercli.service.AppPreferences
 import it.andreag.whispercli.service.MediaPlayerManager
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
@@ -30,6 +31,9 @@ class ResultPanel : AudioFilePanel() {
         setMargin(table, BigInsets())
         table.selectionModel.selectedItemProperty().addListener({ obs, oldSelection, newSelection ->
             if (newSelection == null) {
+                return@addListener
+            }
+            if (!AppPreferences.getInstance().autoPlayRow()) {
                 return@addListener
             }
             newSelection.audioLine.audioFile.onMedia {

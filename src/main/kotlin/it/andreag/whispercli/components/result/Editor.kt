@@ -2,6 +2,7 @@ package it.andreag.whispercli.components.result
 
 import it.andreag.whispercli.model.AudioFile
 import it.andreag.whispercli.model.ParsedLine
+import it.andreag.whispercli.service.AppPreferences
 import it.andreag.whispercli.service.MediaPlayerManager
 import javafx.beans.value.ChangeListener
 import javafx.scene.control.Button
@@ -13,6 +14,7 @@ import org.kordamp.ikonli.javafx.FontIcon
 import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import kotlin.math.max
 
 class Editor : BorderPane {
     private val textArea: TextArea = TextArea()
@@ -34,6 +36,7 @@ class Editor : BorderPane {
         saveButton.graphic = saveIcon
 
         top = toolbar
+        textArea.isWrapText = true
         center = textArea
         addListeners()
     }
@@ -41,13 +44,22 @@ class Editor : BorderPane {
     fun addListeners() {
         textArea.caretPositionProperty().addListener(ChangeListener { observable, oldValue, newValue ->
             val newRow = getRowFromCaretPosition(newValue)
-            if (currentRow != newRow) {
-                currentRow = newRow
-                if (currentRow != null) {
-                    audioFile?.onMedia {
-                        MediaPlayerManager.getInstance().play(parsedLines!![currentRow!! - 1])
-                    }
-                }
+            if (!AppPreferences.getInstance().autoPlayRow()) {
+                return@ChangeListener
+            }
+            if (currentRow == newRow) {
+                return@ChangeListener
+            }
+            currentRow = newRow
+            if (currentRow == null) {
+                return@ChangeListener
+            }
+            audioFile?.onMedia {
+                MediaPlayerManager.getInstance().play(
+                    parsedLines!![
+                        max(currentRow!! - 1, 0)
+                    ]
+                )
             }
         })
     }

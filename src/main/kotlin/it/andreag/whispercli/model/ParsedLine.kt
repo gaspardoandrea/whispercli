@@ -77,4 +77,11 @@ class ParsedLine {
         val dtf = DateTimeFormatter.ofPattern("HH:mm:ss.S");
         return from.format(dtf) + " " + to.format(dtf) + " " + text
     }
+
+    fun getLineDuration(): Long {
+        // FIXME c'è qualcosa che no va qui
+        val end = audioLine?.end?.toDouble()?.plus(1.2)
+        val start = audioLine?.start?.toDouble()
+        return (end?.minus(start ?: 0.0)?.toLong() ?: 0) * 1000
+    }
 }

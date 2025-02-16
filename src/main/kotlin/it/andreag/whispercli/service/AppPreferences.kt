@@ -65,6 +65,14 @@ class AppPreferences private constructor() {
         return this.preferences.getBoolean("CheckOnStartup", true)
     }
 
+    fun setAutoPlayRow(bool: Boolean) {
+        this.preferences.putBoolean("AutoPlayRow", bool)
+    }
+
+    fun autoPlayRow(): Boolean {
+        return this.preferences.getBoolean("AutoPlayRow", true)
+    }
+
     companion object {
         @Volatile
         private var instance: AppPreferences? = null

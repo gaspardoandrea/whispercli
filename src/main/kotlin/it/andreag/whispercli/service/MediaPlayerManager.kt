@@ -5,9 +5,12 @@ import it.andreag.whispercli.model.ParsedLine
 import javafx.scene.media.Media
 import javafx.scene.media.MediaPlayer
 import javafx.util.Duration
+import java.util.*
 
 class MediaPlayerManager {
     private var playingMediaPlayer: MediaPlayer? = null
+    var stopTimer: Timer = Timer()
+    var timerTask : TimerTask? = null
 
     fun getPlayerFor(media: Media): MediaPlayer {
         return MediaPlayer(media)
@@ -31,7 +34,11 @@ class MediaPlayerManager {
     }
 
     fun play(parsedLine: ParsedLine) {
-        // TODO Stop at the end!!!
+        if (timerTask !== null) {
+            timerTask!!.cancel()
+        }
+        stopTimer.purge()
+
         val player = parsedLine.audioFile.getPlayer()
         setPlayingPlayer(player)
         if (player == null) {
@@ -43,6 +50,13 @@ class MediaPlayerManager {
         player.seek(parsedLine.getFromDuration())
         player.startTime = parsedLine.getFromDuration()
         player.play()
+
+        timerTask = object : TimerTask() {
+            override fun run() {
+                player.stop()
+            }
+        }
+        stopTimer.schedule(timerTask, parsedLine.getLineDuration())
     }
 
     fun stop() {

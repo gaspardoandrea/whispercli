@@ -66,6 +66,14 @@
                         <FontIcon iconLiteral="%iconMediaStop" iconSize="20"/>
                     </graphic>
                 </MenuItem>
+                <CheckMenuItem mnemonicParsing="false"
+                               text="%autoPlayRow"
+                               fx:id="toggleAutoPlayRow"
+                               onAction="#toggleAutoPlayRow">
+                    <graphic>
+                        <FontIcon iconLiteral="%iconAutoPlayRow" iconSize="20"/>
+                    </graphic>
+                </CheckMenuItem>
             </Menu>
             <Menu text="%menuModel">
                 <fx:define>

@@ -40,6 +40,7 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
     lateinit var stopAudioFileItem: MenuItem
     lateinit var selectedModelLabel: Label
     lateinit var toggleCheckOnStartup: CheckMenuItem
+    lateinit var toggleAutoPlayRow: CheckMenuItem
     lateinit var stackPane: StackPane
     private val logger = KotlinLogging.logger {}
     lateinit var playAudioFileCtx: MenuItem
@@ -89,6 +90,7 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
 
         listView.selectionModel.selectedItems.addListener(this)
         toggleCheckOnStartup.isSelected = AppPreferences.getInstance().checkOnStartup()
+        toggleAutoPlayRow.isSelected = AppPreferences.getInstance().autoPlayRow()
         val splitPosition = AppPreferences.getInstance().getSplitPosition()
         if (splitPosition != null) {
             splitPane.setDividerPosition(0, splitPosition)
@@ -343,6 +345,10 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
 
     fun toggleCheckOnStartup() {
         AppPreferences.getInstance().setCheckOnStartup(toggleCheckOnStartup.isSelected)
+    }
+
+    fun toggleAutoPlayRow() {
+        AppPreferences.getInstance().setAutoPlayRow(toggleAutoPlayRow.isSelected)
     }
 
     fun showAboutPopup() {
