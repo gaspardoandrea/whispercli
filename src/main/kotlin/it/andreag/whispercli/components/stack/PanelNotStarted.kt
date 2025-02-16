@@ -5,7 +5,7 @@ import it.andreag.whispercli.components.insets.BigInsets
 import it.andreag.whispercli.model.AudioFile
 import javafx.scene.text.Text
 import javafx.scene.text.TextFlow
-import java.util.ResourceBundle
+import java.util.*
 
 class PanelNotStarted : AudioFilePanel() {
     private var textFlow: TextFlow = TextFlow()

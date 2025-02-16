@@ -393,7 +393,7 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
         if (event.gestureSource != this && event.dragboard.hasFiles()) {
             event.acceptTransferModes(TransferMode.COPY, TransferMode.MOVE)
         }
-        event.consume();
+        event.consume()
     }
 
     fun handleDragDropped(event: DragEvent) {
@@ -402,6 +402,6 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
                 addAudioFileToList(it)
             }
         }
-        event.consume();
+        event.consume()
     }
 }

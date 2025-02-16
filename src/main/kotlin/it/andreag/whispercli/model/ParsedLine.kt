@@ -2,6 +2,7 @@ package it.andreag.whispercli.model
 
 import javafx.util.Duration
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 class ParsedLine {
     var from: LocalTime
@@ -41,7 +42,7 @@ class ParsedLine {
     private fun localTimeFromSec(secs: Double): LocalTime {
         val t = LocalTime.of(0, 0, 0, 0)
 
-        return t.plusSeconds(secs.toLong())
+        return t.plusNanos(secs.times(1000000000).toLong())
     }
 
     private fun matchResult(line: String) = Regex("([0-9][0-9]:[0-9][0-9].[0-9][0-9][0-9])").findAll(line)
@@ -70,5 +71,10 @@ class ParsedLine {
 
     fun getFromDuration(): Duration {
         return Duration(audioLine?.start?.toDouble()?.times(1000) ?: 0.0)
+    }
+
+    fun toEditorString(): String {
+        val dtf = DateTimeFormatter.ofPattern("HH:mm:ss.S");
+        return from.format(dtf) + " " + to.format(dtf) + " " + text
     }
 }

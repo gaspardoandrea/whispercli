@@ -1,6 +1,6 @@
 package it.andreag.whispercli.model
 
-import java.util.ResourceBundle
+import java.util.*
 
 enum class AudioFileStatus {
     New, Transcribing, Transcribed;

@@ -31,6 +31,7 @@ class MediaPlayerManager {
     }
 
     fun play(parsedLine: ParsedLine) {
+        // TODO Stop at the end!!!
         val player = parsedLine.audioFile.getPlayer()
         setPlayingPlayer(player)
         if (player == null) {
