@@ -18,12 +18,14 @@ import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import kotlin.math.max
+import kotlin.text.split
 
 
 class Editor : BorderPane {
     private val textArea: TextArea = TextArea()
     private val saveButton: Button = Button()
     private val toWordButton: Button = Button()
+    private val joinRowsButton: Button = Button()
     private val bundle: ResourceBundle? = ResourceBundle.getBundle("it.andreag.whispercli.bundle")
     private var currentRow: ParsedLine? = null
     private var lines: ArrayList<ParsedLine>? = null
@@ -39,14 +41,22 @@ class Editor : BorderPane {
         saveButton.tooltip = Tooltip(bundle?.getString("save"))
         saveButton.graphic = saveIcon
 
-        val toWord = FontIcon()
-        toWord.iconLiteral = bundle?.getString("iconToWord")
-        toWord.iconSize = 24
+        val toWordIcon = FontIcon()
+        toWordIcon.iconLiteral = bundle?.getString("iconToWord")
+        toWordIcon.iconSize = 24
         toWordButton.tooltip = Tooltip(bundle?.getString("toWord"))
-        toWordButton.graphic = toWord
+        toWordButton.graphic = toWordIcon
+
+        val joinRowsIcon = FontIcon()
+        joinRowsIcon.iconLiteral = bundle?.getString("iconJoinRows")
+        joinRowsIcon.iconSize = 24
+        joinRowsButton.tooltip = Tooltip(bundle?.getString("joinRows"))
+        joinRowsButton.graphic = joinRowsIcon
+        joinRowsButton.isDisable = true
 
         toolbar.items.add(saveButton)
         toolbar.items.add(toWordButton)
+        toolbar.items.add(joinRowsButton)
 
         top = toolbar
         textArea.isWrapText = true
@@ -65,14 +75,25 @@ class Editor : BorderPane {
         toWordButton.onAction = EventHandler<javafx.event.ActionEvent> {
             openInEditor()
         }
+        joinRowsButton.onAction = EventHandler<javafx.event.ActionEvent> {
+            joinRows()
+        }
+
+        textArea.focusedProperty().addListener(ChangeListener { observable, oldValue, newValue ->
+            recalcJoinRowButton()
+        })
 
         textArea.caretPositionProperty().addListener(ChangeListener { observable, oldValue, newValue ->
-            val newRow = getRowFromCaretPosition(newValue)
+            recalcJoinRowButton()
             if (!AppPreferences.getInstance().autoPlayRow()) {
                 return@ChangeListener
             }
+            val newRow = getRowFromCaretPosition(newValue)
+            if (newRow == null) {
+                return@ChangeListener
+            }
             val newParsedLine = ParsedLine.fromSerialized(newRow, audioFile!!)
-            if (currentRow != null && currentRow?.equalsTo(newParsedLine) ?: false) {
+            if (currentRow != null && currentRow?.equalsTo(newParsedLine) == true) {
                 return@ChangeListener
             }
             currentRow = newParsedLine
@@ -81,6 +102,97 @@ class Editor : BorderPane {
                 MediaPlayerManager.getInstance().play(newParsedLine)
             }
         })
+    }
+
+    private fun recalcJoinRowButton() {
+        joinRowsButton.isDisable = textArea.text.isEmpty() || !textArea.isFocused
+    }
+
+    private fun joinRows() {
+        var text = textArea.text
+        val from = getRowFromCaretPosition(textArea.selection.start)
+        if (from == null) {
+            return
+        }
+
+        var to = getRowFromCaretPosition(textArea.selection.end)
+        if (to == null) {
+            return
+        }
+
+        if (from == to) {
+            to = getNextRow(to)
+        }
+        if (to == null || from == to) {
+            return
+        }
+        val fromString = from.getEditorString()
+        val toString = to.getEditorString()
+
+        var startIndex = text.indexOf(fromString)
+        var toIndex = text.indexOf(toString) + toString.length
+
+        val rowsText = text.substring(startIndex, toIndex)
+
+        val pattern: Pattern = Pattern.compile("\\d+:\\d+:\\d+\\.\\d+ \\d+:\\d+:\\d+\\.\\d+")
+        val strings = pattern.splitWithDelimiters(rowsText, -1)
+        val rv: ArrayList<SerializableRow> = ArrayList<SerializableRow>()
+
+        var rangeFrom: String? = null
+        var rangeTo: String? = null
+        strings.forEach {
+            if (it.isEmpty()) {
+                return@forEach
+            }
+            if (rangeFrom == null || rangeTo == null) {
+                var fromTo = it.split(" ")
+                rangeFrom = fromTo[0]
+                rangeTo = fromTo[1]
+            } else {
+                rv.add(SerializableRow(rangeFrom, rangeTo, it.trim()))
+                rangeFrom = null
+                rangeTo = null
+            }
+        }
+
+        textArea.replaceText(startIndex, toIndex, mergeRows(rv).getEditorString())
+    }
+
+    private fun mergeRows(rows: ArrayList<SerializableRow>): SerializableRow {
+        return SerializableRow(rows.first().from, rows.last().to, mergeRowsText(rows).trim())
+    }
+
+    private fun mergeRowsText(rows: ArrayList<SerializableRow>): String {
+        var rv = ""
+        rows.forEach { rv += " " + it.text }
+        return rv.trim()
+
+    }
+
+    private fun getNextRow(row: SerializableRow): SerializableRow? {
+        var text = textArea.text
+        var editorString = row.getEditorString()
+        var toIndex = text.indexOf(editorString) + editorString.length
+        editorString = text.substring(toIndex + 1)
+
+        val pattern: Pattern = Pattern.compile("\\d+:\\d+:\\d+\\.\\d+ \\d+:\\d+:\\d+\\.\\d+")
+        val matcher: Matcher = pattern.matcher(editorString)
+        if (!matcher.find()) {
+            return null
+        }
+        val startTime = matcher.group()
+        var rvText: String? = null
+        if (!matcher.find()) {
+            rvText = editorString
+        } else {
+            val endTime = matcher.group()
+            rvText = editorString.substring(0, editorString.indexOf(endTime) - 1)
+        }
+        val fromTo = startTime.split(" ")
+
+        return SerializableRow(fromTo[0],
+            fromTo[1],
+            rvText.substring(rvText.indexOf(fromTo[1]) + fromTo[1].length + 1).trim())
     }
 
     private fun openInEditor() {
@@ -98,7 +210,8 @@ class Editor : BorderPane {
         saveButton.isDisable = true
     }
 
-    private fun getRowFromCaretPosition(caretPosition: Number): SerializableRow {
+    private fun getRowFromCaretPosition(caretPosition: Number): SerializableRow? {
+        if (textArea.text.isEmpty()) return null
         val allText = textArea.text
         val nextText = allText.substring(max(2, caretPosition.toInt()))
         val pattern: Pattern = Pattern.compile("\\d+:\\d+:\\d+\\.\\d+ \\d+:\\d+:\\d+\\.\\d+")
