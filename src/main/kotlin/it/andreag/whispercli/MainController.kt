@@ -134,13 +134,9 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
 
     @FXML
     fun exitApp() {
-        println(123)
         saveStatus()
-        println(345)
         Platform.exit()
-        println(567)
         exitProcess(0);
-        println(910)
 
     }
 
