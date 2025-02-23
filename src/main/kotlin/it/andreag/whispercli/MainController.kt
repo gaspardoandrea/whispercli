@@ -137,7 +137,6 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
         saveStatus()
         Platform.exit()
         exitProcess(0);
-
     }
 
     @FXML

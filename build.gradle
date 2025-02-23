@@ -8,8 +8,8 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization' version "2.1.10"
 }
 
-group 'it.andreag'
-version '1.0-SNAPSHOT'
+group = 'it.andreag'
+version = '1.0-SNAPSHOT'
 
 layout.buildDirectory.set(file("C:/Users/gaspa/build/${rootProject.name}/${project.name}"))
 
@@ -72,4 +72,16 @@ jlink {
 
 jlinkZip {
     group = 'distribution'
+}
+
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    manifest {
+        attributes 'Main-Class': 'it.andreag.whispercli.WhisperApplication'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
