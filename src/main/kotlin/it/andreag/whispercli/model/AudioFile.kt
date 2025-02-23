@@ -11,7 +11,6 @@ import kotlinx.serialization.Transient
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.security.MessageDigest
-import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 
@@ -274,10 +273,13 @@ data class AudioFile(
                 delimiter = it
             } else {
                 val fromTo = delimiter?.split(" ")
-                rows.add(SerializableRow(
-                    fromTo?.get(0) ?: "",
-                    fromTo?.get(1) ?: "",
-                    it.trim()))
+                rows.add(
+                    SerializableRow(
+                        fromTo?.get(0) ?: "",
+                        fromTo?.get(1) ?: "",
+                        it.trim()
+                    )
+                )
             }
         }
 
@@ -295,8 +297,7 @@ data class AudioFile(
         return normalizeText(sb.trim().toString())
     }
 
-    fun normalizeText(text: String): String
-    {
+    fun normalizeText(text: String): String {
         var text = text.replace("<", "«")
         text = text.replace(">", "»")
         text = text.replace("»»", "»")

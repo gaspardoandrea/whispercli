@@ -13,7 +13,6 @@ import javafx.scene.control.TextArea
 import javafx.scene.control.ToolBar
 import javafx.scene.control.Tooltip
 import javafx.scene.input.KeyEvent
-import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.BorderPane
 import org.kordamp.ikonli.javafx.FontIcon
@@ -23,7 +22,6 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 import javax.swing.JOptionPane
 import kotlin.math.max
-import kotlin.text.split
 
 
 class Editor : BorderPane {
@@ -88,7 +86,7 @@ class Editor : BorderPane {
             if (event.isControlDown && event.text == "j") {
                 joinRows()
             } else if (event.isControlDown && event.text == "s") {
-                saveEditor()
+                save()
             } else if (event.isControlDown && event.text == "w") {
                 openInEditor()
             } else if (event.isControlDown && event.text == "r") {
@@ -97,7 +95,7 @@ class Editor : BorderPane {
         }
 
         saveButton.onAction = EventHandler<ActionEvent> {
-            saveEditor()
+            save()
         }
         resetButton.onAction = EventHandler<ActionEvent> {
             resetEditor()
@@ -105,7 +103,7 @@ class Editor : BorderPane {
         toWordButton.onAction = EventHandler<ActionEvent> {
             openInEditor()
         }
-        joinRowsButton.onMousePressed = EventHandler< MouseEvent> {
+        joinRowsButton.onMousePressed = EventHandler<MouseEvent> {
             joinRows()
         }
 
@@ -135,9 +133,12 @@ class Editor : BorderPane {
     }
 
     private fun resetEditor() {
-        if (JOptionPane.showConfirmDialog(null, bundle?.getString("confirmReset"),
+        if (JOptionPane.showConfirmDialog(
+                null, bundle?.getString("confirmReset"),
                 bundle?.getString("confirm"),
-                JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
+                JOptionPane.YES_NO_OPTION
+            ) == JOptionPane.NO_OPTION
+        ) {
             return
         }
         updateEditorContent(audioFile!!, AppPreferences.getInstance().getTranscriptionModel(), true)
@@ -230,9 +231,11 @@ class Editor : BorderPane {
         }
         val fromTo = startTime.split(" ")
 
-        return SerializableRow(fromTo[0],
+        return SerializableRow(
+            fromTo[0],
             fromTo[1],
-            rvText.substring(rvText.indexOf(fromTo[1]) + fromTo[1].length + 1).trim())
+            rvText.substring(rvText.indexOf(fromTo[1]) + fromTo[1].length + 1).trim()
+        )
     }
 
     private fun openInEditor() {
@@ -245,7 +248,7 @@ class Editor : BorderPane {
         }
     }
 
-    private fun saveEditor() {
+    fun save() {
         audioFile?.saveFromEditor(textArea.text)
         saveButton.isDisable = true
     }
@@ -277,5 +280,9 @@ class Editor : BorderPane {
         textArea.text = stringBuilder.toString()
         this.audioFile = audioFile
         saveButton.isDisable = true
+    }
+
+    fun needSave(): Boolean {
+        return !saveButton.isDisable
     }
 }

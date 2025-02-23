@@ -16,9 +16,15 @@ abstract class AudioFilePanel : BorderPane() {
     }
 
     open fun updateFromFile(transcriptionModel: String, audioFile: AudioFile) {
+        if (needSave()) {
+            save()
+        }
         titleLabel.text = audioFile.description + " " + audioFile.getFormattedPercent()
         updateContent(transcriptionModel, audioFile)
     }
+
+    abstract fun needSave(): Boolean
+    abstract fun save()
 
     abstract fun updateContent(transcriptionModel: String, audioFile: AudioFile)
 }

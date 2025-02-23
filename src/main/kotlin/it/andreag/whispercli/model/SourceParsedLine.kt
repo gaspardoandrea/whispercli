@@ -1,6 +1,5 @@
 package it.andreag.whispercli.model
 
-import javafx.util.Duration
 import java.time.LocalTime
 
 class SourceParsedLine : ParsedLine {

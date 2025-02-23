@@ -11,6 +11,13 @@ class PanelNotStarted : AudioFilePanel() {
     private var textFlow: TextFlow = TextFlow()
     private val bundle: ResourceBundle? = ResourceBundle.getBundle("it.andreag.whispercli.bundle")
 
+    override fun needSave(): Boolean {
+        return false
+    }
+
+    override fun save() {
+    }
+
     init {
         center = textFlow
         setMargin(textFlow, BigInsets())

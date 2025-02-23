@@ -50,4 +50,11 @@ class PanelStarted : AudioFilePanel() {
             }
         }
     }
+
+    override fun needSave(): Boolean {
+        return false
+    }
+
+    override fun save() {
+    }
 }
