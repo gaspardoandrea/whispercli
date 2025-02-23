@@ -33,6 +33,7 @@ import java.beans.PropertyChangeListener
 import java.io.File
 import java.net.URL
 import java.util.*
+import kotlin.system.exitProcess
 
 
 class MainController : Initializable, ListChangeListener<AudioFile>, PropertyChangeListener, ThreadEventListener {
@@ -133,8 +134,14 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
 
     @FXML
     fun exitApp() {
+        println(123)
         saveStatus()
+        println(345)
         Platform.exit()
+        println(567)
+        exitProcess(0);
+        println(910)
+
     }
 
     @FXML
@@ -368,7 +375,7 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
     }
 
     fun setStage(stage: Stage) {
-        stage.setOnCloseRequest { saveStatus() }
+        stage.setOnCloseRequest { exitApp() }
     }
 
     fun modelSelected(actionEvent: ActionEvent) {
