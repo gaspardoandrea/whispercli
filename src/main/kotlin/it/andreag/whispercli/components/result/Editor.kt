@@ -8,19 +8,16 @@ import it.andreag.whispercli.service.MediaPlayerManager
 import javafx.beans.value.ChangeListener
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
-import javafx.scene.control.Button
-import javafx.scene.control.TextArea
-import javafx.scene.control.ToolBar
-import javafx.scene.control.Tooltip
+import javafx.scene.control.*
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.BorderPane
+import javafx.util.Callback
 import org.kordamp.ikonli.javafx.FontIcon
 import java.awt.Desktop
 import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
-import javax.swing.JOptionPane
 import kotlin.math.max
 
 
@@ -133,15 +130,35 @@ class Editor : BorderPane {
     }
 
     private fun resetEditor() {
-        if (JOptionPane.showConfirmDialog(
-                null, bundle?.getString("confirmReset"),
-                bundle?.getString("confirm"),
-                JOptionPane.YES_NO_OPTION
-            ) == JOptionPane.NO_OPTION
-        ) {
+        val title = bundle?.getString("confirm")
+        val message = bundle?.getString("confirmReset")
+
+        if (!showConfirmDialog(title, message)) {
             return
         }
+
+//        if (JOptionPane.showConfirmDialog(
+//                null, bundle?.getString("confirmReset"),
+//                bundle?.getString("confirm"),
+//                JOptionPane.YES_NO_OPTION
+//            ) == JOptionPane.NO_OPTION
+//        ) {
+//            return
+//        }
         updateEditorContent(audioFile!!, AppPreferences.getInstance().getTranscriptionModel(), true)
+    }
+
+    private fun showConfirmDialog(title: String?, content: String?): Boolean {
+        val dialog = Dialog<Boolean?>()
+        dialog.title = title
+        dialog.contentText = content
+        dialog.dialogPane.buttonTypes.add(ButtonType.YES)
+        dialog.dialogPane.buttonTypes.add(ButtonType.NO)
+        dialog.resultConverter = Callback { buttonType: ButtonType? ->
+            return@Callback buttonType == ButtonType.YES
+        }
+        val result: Boolean = dialog.showAndWait().orElse(false) == true
+        return result
     }
 
     private fun recalcJoinRowButton() {
