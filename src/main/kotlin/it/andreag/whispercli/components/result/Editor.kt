@@ -6,26 +6,34 @@ import it.andreag.whispercli.model.SerializableRow
 import it.andreag.whispercli.service.AppPreferences
 import it.andreag.whispercli.service.MediaPlayerManager
 import javafx.beans.value.ChangeListener
+import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.control.Button
 import javafx.scene.control.TextArea
 import javafx.scene.control.ToolBar
 import javafx.scene.control.Tooltip
+import javafx.scene.input.KeyEvent
+import javafx.scene.input.MouseButton
+import javafx.scene.input.MouseEvent
 import javafx.scene.layout.BorderPane
 import org.kordamp.ikonli.javafx.FontIcon
 import java.awt.Desktop
 import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import javax.swing.JOptionPane
 import kotlin.math.max
 import kotlin.text.split
 
 
 class Editor : BorderPane {
     private val textArea: TextArea = TextArea()
+
     private val saveButton: Button = Button()
     private val toWordButton: Button = Button()
     private val joinRowsButton: Button = Button()
+    private val resetButton: Button = Button()
+
     private val bundle: ResourceBundle? = ResourceBundle.getBundle("it.andreag.whispercli.bundle")
     private var currentRow: ParsedLine? = null
     private var lines: ArrayList<ParsedLine>? = null
@@ -47,6 +55,12 @@ class Editor : BorderPane {
         toWordButton.tooltip = Tooltip(bundle?.getString("toWord"))
         toWordButton.graphic = toWordIcon
 
+        val resetIcon = FontIcon()
+        resetIcon.iconLiteral = bundle?.getString("iconReset")
+        resetIcon.iconSize = 24
+        resetButton.tooltip = Tooltip(bundle?.getString("resetEditor"))
+        resetButton.graphic = resetIcon
+
         val joinRowsIcon = FontIcon()
         joinRowsIcon.iconLiteral = bundle?.getString("iconJoinRows")
         joinRowsIcon.iconSize = 24
@@ -57,6 +71,7 @@ class Editor : BorderPane {
         toolbar.items.add(saveButton)
         toolbar.items.add(toWordButton)
         toolbar.items.add(joinRowsButton)
+        toolbar.items.add(resetButton)
 
         top = toolbar
         textArea.isWrapText = true
@@ -69,13 +84,28 @@ class Editor : BorderPane {
             saveButton.isDisable = false
         })
 
-        saveButton.onAction = EventHandler<javafx.event.ActionEvent> {
+        textArea.onKeyPressed = EventHandler<KeyEvent> { event: KeyEvent ->
+            if (event.isControlDown && event.text == "j") {
+                joinRows()
+            } else if (event.isControlDown && event.text == "s") {
+                saveEditor()
+            } else if (event.isControlDown && event.text == "w") {
+                openInEditor()
+            } else if (event.isControlDown && event.text == "r") {
+                resetEditor()
+            }
+        }
+
+        saveButton.onAction = EventHandler<ActionEvent> {
             saveEditor()
         }
-        toWordButton.onAction = EventHandler<javafx.event.ActionEvent> {
+        resetButton.onAction = EventHandler<ActionEvent> {
+            resetEditor()
+        }
+        toWordButton.onAction = EventHandler<ActionEvent> {
             openInEditor()
         }
-        joinRowsButton.onAction = EventHandler<javafx.event.ActionEvent> {
+        joinRowsButton.onMousePressed = EventHandler< MouseEvent> {
             joinRows()
         }
 
@@ -102,6 +132,15 @@ class Editor : BorderPane {
                 MediaPlayerManager.getInstance().play(newParsedLine)
             }
         })
+    }
+
+    private fun resetEditor() {
+        if (JOptionPane.showConfirmDialog(null, bundle?.getString("confirmReset"),
+                bundle?.getString("confirm"),
+                JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
+            return
+        }
+        updateEditorContent(audioFile!!, AppPreferences.getInstance().getTranscriptionModel(), true)
     }
 
     private fun recalcJoinRowButton() {
@@ -155,7 +194,8 @@ class Editor : BorderPane {
             }
         }
 
-        textArea.replaceText(startIndex, toIndex, mergeRows(rv).getEditorString())
+        val newText = mergeRows(rv).getEditorString()
+        textArea.replaceText(startIndex, toIndex, newText)
     }
 
     private fun mergeRows(rows: ArrayList<SerializableRow>): SerializableRow {
@@ -229,9 +269,9 @@ class Editor : BorderPane {
         return SerializableRow(fromTo[0], fromTo[1], strings.last())
     }
 
-    fun updateEditorContent(audioFile: AudioFile, transcriptionModel: String) {
+    fun updateEditorContent(audioFile: AudioFile, transcriptionModel: String, forceReload: Boolean) {
         val stringBuilder = StringBuilder()
-        audioFile.loadParsedLines(transcriptionModel)
+        audioFile.loadParsedLines(transcriptionModel, forceReload)
         lines = audioFile.editedLines
         lines?.forEach { stringBuilder.appendLine(it.toEditorString()) }
         textArea.text = stringBuilder.toString()

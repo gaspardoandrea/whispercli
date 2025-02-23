@@ -58,6 +58,6 @@ class ResultPanel : AudioFilePanel() {
     }
 
     private fun updateEditorContent(audioFile: AudioFile, transcriptionModel: String) {
-        editor.updateEditorContent(audioFile, transcriptionModel)
+        editor.updateEditorContent(audioFile, transcriptionModel, false)
     }
 }

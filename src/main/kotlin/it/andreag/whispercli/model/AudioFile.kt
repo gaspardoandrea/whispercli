@@ -198,7 +198,7 @@ data class AudioFile(
         return ""
     }
 
-    fun loadParsedLines(transcriptionModel: String) {
+    fun loadParsedLines(transcriptionModel: String, forceReload: Boolean) {
         sourceParsedLines.clear()
         val indexFile = File(getOutputDir(transcriptionModel), getFileNameWithExt("json"))
         val editedFile = getEditedFile(transcriptionModel)
@@ -210,7 +210,7 @@ data class AudioFile(
         audio.segments.forEach {
             sourceParsedLines.add(SourceParsedLine.fromAudioLine(it, this))
         }
-        if (editedFile.exists()) {
+        if (editedFile.exists() && !forceReload) {
             loadEditedFile(editedFile)
         } else {
             loadEditedLinesFromSource()
