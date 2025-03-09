@@ -114,10 +114,10 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
         when (model) {
             "tiny" -> modelTiny
             "base" -> modelBase
+            "turbo" -> modelTurbo
             "small" -> modelSmall
             "medium" -> modelMedium
             "large" -> modelLarge
-            "turbo" -> modelTurbo
             else -> modelTiny
         }.isSelected = true
     }

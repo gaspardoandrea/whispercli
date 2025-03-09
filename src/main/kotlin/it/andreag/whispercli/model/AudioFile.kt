@@ -12,6 +12,7 @@ import kotlinx.serialization.json.Json
 import java.io.File
 import java.security.MessageDigest
 import java.util.regex.Pattern
+import kotlin.math.floor
 
 
 @Serializable
@@ -189,9 +190,9 @@ data class AudioFile(
         if (duration != null) {
             return String.Companion.format(
                 "%02.0f:%02.0f:%02.0f",
-                duration.toHours(),
-                duration.toMinutes(),
-                duration.toSeconds()
+                floor(duration.toHours()),
+                floor(duration.toMinutes()),
+                floor(duration.toSeconds())
             )
         }
         return ""

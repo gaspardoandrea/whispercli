@@ -1,5 +1,6 @@
 package it.andreag.whispercli.model
 
+import it.andreag.whispercli.WhisperApplication
 import it.andreag.whispercli.events.ThreadDispatcher
 import it.andreag.whispercli.service.AppPreferences
 import it.andreag.whispercli.setup.Utils
@@ -20,26 +21,38 @@ class WhisperProcess(private val audioFile: AudioFile) : Task<Boolean>() {
     fun startTranscribeProcess(audioFile: AudioFile) {
         try {
             val transcriptionModel = AppPreferences.getInstance().getTranscriptionModel()
+            val lang = getLanguage()
+            val inputFile = audioFile.filePath
+            val outputPath = audioFile.getOutputDir(transcriptionModel).absolutePath
 
-            val args = arrayOf(
-                Utils.getPythonBin(),
-                "-u",
-                "-m",
-                "whisper",
-                "--fp16",
-                "False",
-                "--language",
-                getLanguage(),
-                audioFile.filePath,
-                "--model",
-                transcriptionModel,
-                "--output_dir",
-                audioFile.getOutputDir(transcriptionModel).absolutePath
-            )
+//            val args = arrayOf(
+//                "chcp 850 ;",
+//                Utils.getPythonBin(),
+//                "-u",
+//                "-m",
+//                "whisper",
+//                "--fp16",
+//                "False",
+//                "--language",
+//                lang,
+//                inputFile,
+//                "--model",
+//                transcriptionModel,
+//                "--output_dir",
+//                outputPath
+//            )
+//
+//            println(args.joinToString(" "))
+//
+//            val pb = ProcessBuilder(*args)
 
-            println(args.joinToString(" "))
 
-            val pb = ProcessBuilder(*args)
+
+            val bin = "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
+            val file = WhisperApplication::class.java.getResource("whisper.ps1")?.file.toString().trimStart('/')
+            val pb = ProcessBuilder(bin, "-File", file, lang, inputFile, transcriptionModel, outputPath)
+
+
             pb.redirectErrorStream(true)
             val process = pb.start()
             val processStdOutput = process.inputStream

@@ -81,10 +81,10 @@
                 </fx:define>
                 <RadioMenuItem toggleGroup="$model" fx:id="modelTiny" text="%tiny" onAction="#modelSelected"/>
                 <RadioMenuItem toggleGroup="$model" fx:id="modelBase" text="%base" onAction="#modelSelected"/>
+                <RadioMenuItem toggleGroup="$model" fx:id="modelTurbo" text="%turbo" onAction="#modelSelected"/>
                 <RadioMenuItem toggleGroup="$model" fx:id="modelSmall" text="%small" onAction="#modelSelected"/>
                 <RadioMenuItem toggleGroup="$model" fx:id="modelMedium" text="%medium" onAction="#modelSelected"/>
                 <RadioMenuItem toggleGroup="$model" fx:id="modelLarge" text="%large" onAction="#modelSelected"/>
-                <RadioMenuItem toggleGroup="$model" fx:id="modelTurbo" text="%turbo" onAction="#modelSelected"/>
             </Menu>
             <Menu text="%menuHelp">
                 <MenuItem text="%checkWhisperSetup" disable="true"
