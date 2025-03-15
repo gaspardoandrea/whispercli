@@ -1,6 +1,7 @@
 module it.andreag.whispercli {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.media;
 
     requires kotlin.stdlib;
     requires kotlinx.datetime;
