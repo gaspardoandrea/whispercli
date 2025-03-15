@@ -8,10 +8,10 @@
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.andreag.whispercli.AboutWindow">
     <center>
         <VBox BorderPane.alignment="CENTER">
-            <Label textAlignment="CENTER" text="%whisperCli"></Label>
-            <Label textAlignment="CENTER" text="%developedBy"></Label>
-            <Label textAlignment="CENTER" text="%perCaFoscari"></Label>
-            <Label textAlignment="CENTER" text="2024"></Label>
+            <Label textAlignment="CENTER" text="%whisperCli"/>
+            <Label textAlignment="CENTER" text="%developedBy"/>
+            <Label textAlignment="CENTER" text="%perCaFoscari"/>
+            <Label textAlignment="CENTER" text="2024"/>
         </VBox>
     </center>
     <bottom>
