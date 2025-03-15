@@ -171,7 +171,7 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
         return false
     }
 
-    private fun refreshEnabledActions() {
+    fun refreshEnabledActions() {
         logger.debug { "refreshEnabledActions" }
 
         removeItem.isDisable = isSelectionEmpty()
