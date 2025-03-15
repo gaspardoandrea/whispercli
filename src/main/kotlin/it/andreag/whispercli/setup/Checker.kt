@@ -7,10 +7,12 @@ import javafx.scene.control.Label
 import mu.KotlinLogging
 import java.awt.Desktop
 import java.net.URI
+import java.net.URL
 
 class Checker(private val label: Label, private val delayed: Boolean) :
     Task<Boolean>() {
     private val pythonInstallUrl = "https://www.python.org/downloads/windows/"
+    private val powerShellInstallUrl = "https://learn.microsoft.com/it-it/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.5#installing-the-msi-package"
     private val logger = KotlinLogging.logger {}
 
 
@@ -28,6 +30,15 @@ class Checker(private val label: Label, private val delayed: Boolean) :
     private fun checkInstall(): Boolean {
         showCheckInfoLabel()
         Thread.sleep(250L)
+        if (Utils.getInstance().checkPowerShell()) {
+            showPowerShellOk()
+            Thread.sleep(200L)
+        } else {
+            showPowerShellNok()
+            Thread.sleep(2000L)
+            disposeLabel()
+            return false
+        }
         if (Utils.getInstance().checkPython()) {
             showPythonOk()
             Thread.sleep(200L)
@@ -72,12 +83,20 @@ class Checker(private val label: Label, private val delayed: Boolean) :
         Thread.sleep(1500L)
         showError("Install the last Python version for Windows!")
         Thread.sleep(2500L)
-        openBrowser()
+        openBrowser(pythonInstallUrl)
     }
 
-    private fun openBrowser() {
+    private fun showPowerShellNok() {
+        showError("PowerShell not installed properly")
+        Thread.sleep(1500L)
+        showError("Install the last PowerShell version for Windows!")
+        Thread.sleep(2500L)
+        openBrowser(powerShellInstallUrl)
+    }
+
+    private fun openBrowser(url: String) {
         try {
-            Desktop.getDesktop().browse(URI(pythonInstallUrl))
+            Desktop.getDesktop().browse(URI(url))
         } catch (e: Exception) {
             logger.error { e }
         }
@@ -85,6 +104,10 @@ class Checker(private val label: Label, private val delayed: Boolean) :
 
     private fun showPythonOk() {
         showMessage("Python installed properly")
+    }
+
+    private fun showPowerShellOk() {
+        showMessage("PowerShell installed properly")
     }
 
     private fun showCheckInfoLabel() {

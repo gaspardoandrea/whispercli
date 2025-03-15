@@ -46,7 +46,7 @@ class Utils {
 
     fun setExecutionPolicy(): Boolean {
         try {
-            val bin = "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
+            val bin = getPowerShellExecutable()
             val args = "Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Bypass"
             val pb = ProcessBuilder(bin, "-Command", args)
             pb.start()
@@ -60,7 +60,7 @@ class Utils {
     fun installWhisper(): Boolean {
         try {
             setExecutionPolicy()
-            val bin = "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
+            val bin = getPowerShellExecutable()
             val file = getPs1("install.ps1")
             val pb = ProcessBuilder(bin, "-File", file)
             logger.error { "$bin -File $file" }
@@ -94,10 +94,19 @@ class Utils {
         }
     }
 
+    fun checkPowerShell(): Boolean {
+        try {
+            ProcessBuilder(getPowerShellExecutable(), "-help").start()
+            return true
+        } catch (_: Exception) {
+            return false
+        }
+    }
+
     fun updateWhisper(): Boolean {
         try {
             setExecutionPolicy()
-            val bin = "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
+            val bin = getPowerShellExecutable()
             val file = getPs1("update.ps1")
             val pb = ProcessBuilder(bin, "-File", file)
             logger.error { "$bin -File $file" }
@@ -121,6 +130,8 @@ class Utils {
             return false
         }
     }
+
+    private fun getPowerShellExecutable(): String = "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
 
     companion object {
         @Volatile
