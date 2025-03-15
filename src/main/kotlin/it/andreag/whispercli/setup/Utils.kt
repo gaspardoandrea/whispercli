@@ -34,10 +34,34 @@ class Utils {
         }
     }
 
-    fun installWhisper(): Boolean {
+    fun getPs1(name: String): String {
+        var rv = WhisperApplication::class.java.getResource(name)?.file.toString().trimStart('/')
+        if (rv.contains("!")) {
+            rv = rv.replace("WhisperCli-1.0.jar!/it/andreag/whispercli/", "resources/")
+            rv = rv.replace("file:/", "")
+            rv = rv.replace("/", "\\")
+        }
+        return rv
+    }
+
+    fun setExecutionPolicy(): Boolean {
         try {
             val bin = "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
-            val file = WhisperApplication::class.java.getResource("install.ps1")?.file.toString().trimStart('/')
+            val args = "Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Bypass"
+            val pb = ProcessBuilder(bin, "-Command", args)
+            pb.start()
+            return true
+        } catch (e: Exception) {
+            logger.error { e }
+            return false
+        }
+    }
+
+    fun installWhisper(): Boolean {
+        try {
+            setExecutionPolicy()
+            val bin = "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
+            val file = getPs1("install.ps1")
             val pb = ProcessBuilder(bin, "-File", file)
             logger.error { "$bin -File $file" }
             pb.redirectErrorStream(true)
@@ -72,8 +96,9 @@ class Utils {
 
     fun updateWhisper(): Boolean {
         try {
+            setExecutionPolicy()
             val bin = "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
-            val file = WhisperApplication::class.java.getResource("update.ps1")?.file.toString().trimStart('/')
+            val file = getPs1("update.ps1")
             val pb = ProcessBuilder(bin, "-File", file)
             logger.error { "$bin -File $file" }
             pb.redirectErrorStream(true)

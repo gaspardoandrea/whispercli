@@ -1,3 +1,3 @@
-$scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
-Start-Process powershell -Verb runAs $scriptPath\admin.ps1
+$MyDir = [System.IO.Path]::GetDirectoryName($myInvocation.MyCommand.Definition)
 
+if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$MyDir\admin.ps1`"" -Verb RunAs }

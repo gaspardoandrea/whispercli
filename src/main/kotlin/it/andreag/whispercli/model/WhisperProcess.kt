@@ -45,13 +45,10 @@ class WhisperProcess(private val audioFile: AudioFile) : Task<Boolean>() {
 //            println(args.joinToString(" "))
 //
 //            val pb = ProcessBuilder(*args)
-
-
-
+            Utils.getInstance().setExecutionPolicy()
             val bin = "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
-            val file = WhisperApplication::class.java.getResource("whisper.ps1")?.file.toString().trimStart('/')
+            val file = Utils.getInstance().getPs1("whisper.ps1")
             val pb = ProcessBuilder(bin, "-File", file, lang, inputFile, transcriptionModel, outputPath)
-
 
             pb.redirectErrorStream(true)
             val process = pb.start()

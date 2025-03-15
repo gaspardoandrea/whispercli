@@ -12,7 +12,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 ## Install ffmpeg
 <blockquote>
-choco install ffmpeg wget -y
+choco install ffmpeg wget git -y
 </blockquote>
 
 ## Install pip
@@ -34,7 +34,7 @@ py -m pip install git+https://github.com/openai/whisper.git
 # Uninstall
 <blockquote>
 py -m pip uninstall openai-whisper
-choco uninstall ffmpeg wget
+choco uninstall ffmpeg wget git
 </blockquote>
 
 ## remove choco

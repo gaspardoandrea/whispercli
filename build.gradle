@@ -9,7 +9,7 @@ plugins {
 }
 
 group = 'it.andreag'
-version = '1.0-SNAPSHOT'
+version = '1.0'
 
 layout.buildDirectory.set(file("C:/Users/gaspa/build/${rootProject.name}/${project.name}"))
 
