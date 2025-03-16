@@ -1,3 +1,3 @@
 chcp 850
 
-C:\Users\gaspa\AppData\Local\Programs\Python\Launcher\py.exe -u -m whisper --fp16 False --language $args[0] $args[1] --model $args[2] --output_dir $args[3]
+C:\Users\gaspa\AppData\Local\Programs\Python\Launcher\py.exe $args[4] $args[0] $args[1] $args[2] $args[3]

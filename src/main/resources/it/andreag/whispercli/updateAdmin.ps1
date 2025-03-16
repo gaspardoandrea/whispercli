@@ -1,3 +1,3 @@
-choco upgrade ffmpeg wget git -y
+choco upgrade wget git ffmpeg -y
 py -m pip install --upgrade pip
-py -m pip install --upgrade --no-deps --force-reinstall git+https://github.com/openai/whisper.git
+py -m pip install --upgrade --no-deps --force-reinstall whisperx

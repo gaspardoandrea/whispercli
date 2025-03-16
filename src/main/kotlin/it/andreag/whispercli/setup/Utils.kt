@@ -12,7 +12,7 @@ class Utils {
 
     fun checkWhisper(): Boolean {
         try {
-            val pb = ProcessBuilder(getPythonBin(), "-m", "whisper")
+            val pb = ProcessBuilder(getPythonBin(), "-c", "import whisperx")
             pb.redirectErrorStream(true)
             val process = pb.start()
             val builder = StringBuilder()

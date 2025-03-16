@@ -48,7 +48,8 @@ class WhisperProcess(private val audioFile: AudioFile) : Task<Boolean>() {
             Utils.getInstance().setExecutionPolicy()
             val bin = "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
             val file = Utils.getInstance().getPs1("whisper.ps1")
-            val pb = ProcessBuilder(bin, "-File", file, lang, inputFile, transcriptionModel, outputPath)
+            val py = Utils.getInstance().getPs1("faster.py")
+            val pb = ProcessBuilder(bin, "-File", file, lang, inputFile, transcriptionModel, outputPath, py)
 
             pb.redirectErrorStream(true)
             val process = pb.start()

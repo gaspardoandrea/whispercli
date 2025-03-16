@@ -139,11 +139,11 @@ data class AudioFile(
     }
 
     private fun hasFilesFor(transcriptionModel: String): Boolean {
-        return File(getOutputDir(transcriptionModel), getTxtFileName()).exists()
+        return File(getOutputDir(transcriptionModel), getJsonFileName()).exists()
     }
 
-    private fun getTxtFileName(): String {
-        return getFileNameWithExt("txt")
+    private fun getJsonFileName(): String {
+        return getFileNameWithExt("json")
     }
 
     private fun getFileNameWithExt(ext: String, postFix: String = ""): String {
