@@ -28,6 +28,7 @@ class Editor : BorderPane {
     private val toWordButton: Button = Button()
     private val joinRowsButton: Button = Button()
     private val resetButton: Button = Button()
+    private val transcriptionDuration: Label = Label()
 
     private val bundle: ResourceBundle? = ResourceBundle.getBundle("it.andreag.whispercli.bundle")
     private var currentRow: ParsedLine? = null
@@ -67,6 +68,7 @@ class Editor : BorderPane {
         toolbar.items.add(toWordButton)
         toolbar.items.add(joinRowsButton)
         toolbar.items.add(resetButton)
+        toolbar.items.add(transcriptionDuration)
 
         top = toolbar
         textArea.isWrapText = true
@@ -297,6 +299,7 @@ class Editor : BorderPane {
         textArea.text = stringBuilder.toString()
         this.audioFile = audioFile
         saveButton.isDisable = true
+        transcriptionDuration.text = audioFile.getFormattedProcTime()
     }
 
     fun needSave(): Boolean {

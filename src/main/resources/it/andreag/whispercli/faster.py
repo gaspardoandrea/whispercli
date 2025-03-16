@@ -2,6 +2,9 @@ import whisperx
 import json
 from pathlib import Path
 import sys
+import time
+
+startTime = time.time()
 
 device = "cpu"
 lang = sys.argv[1]
@@ -24,6 +27,11 @@ print("Loading " + audio_file)
 audio = whisperx.load_audio(audio_file)
 result = model.transcribe(audio, batch_size=batch_size, language=lang)
 print(result["segments"]) # before alignment
+
+endTime = time.time()
+
+result["startTime"] = startTime
+result["endTime"] = endTime
 
 with open(outputFile, 'w', encoding='utf-8') as f:
     json.dump(result, f, ensure_ascii=False, indent=4)

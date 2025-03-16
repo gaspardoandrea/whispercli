@@ -41,6 +41,12 @@ data class AudioFile(
     var percent: Int? = null
 
     @Transient
+    var startTime: Double? = null
+
+    @Transient
+    var endTime: Double? = null
+
+    @Transient
     val sourceParsedLines: ArrayList<SourceParsedLine> = ArrayList()
 
     @Transient
@@ -210,6 +216,10 @@ data class AudioFile(
         audio.segments.forEach {
             sourceParsedLines.add(SourceParsedLine.fromAudioLine(it, this))
         }
+
+        startTime = audio.startTime
+        endTime = audio.endTime
+
         if (editedFile.exists() && !forceReload) {
             loadEditedFile(editedFile)
         } else {
@@ -222,7 +232,7 @@ data class AudioFile(
         return File(getOutputDir(transcriptionModel), getFileNameWithExt("json", "-edit"))
     }
 
-    public fun getEditedTextFile(transcriptionModel: String): File {
+    fun getEditedTextFile(transcriptionModel: String): File {
         return File(getOutputDir(transcriptionModel), getFileNameWithExt("txt", "-edit"))
     }
 
@@ -325,5 +335,18 @@ data class AudioFile(
 //        text = text.replace(Regex("/^\s+|\s+$/m", "\n", $text);
 
         return text
+    }
+
+    fun getProcTime(): Double? {
+        return endTime?.minus(startTime!!)
+    }
+
+    fun getFormattedProcTime(): String {
+        val procTime = getProcTime()
+
+        if (procTime == null) return ""
+        val min = floor(procTime.div(60)).toInt()
+        val sec = (procTime - min.times(60)).toInt()
+        return " Proc. in: $min' $sec\""
     }
 }
