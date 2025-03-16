@@ -109,6 +109,7 @@ data class AudioFile(
     }
 
     private fun getOutputDir() = File(ApplicationPersistence.getInstance().getDataPath(), getNormalizedName())
+    private fun getOutputDirFor(transcriptionModel: String) = File(getOutputDir(), transcriptionModel)
 
     private fun getNormalizedName(): String {
         val md = MessageDigest.getInstance("MD5")
@@ -122,8 +123,8 @@ data class AudioFile(
         }
     }
 
-    fun deleteAllOutputFiles() {
-        getOutputDir().deleteRecursively()
+    fun deleteAllOutputFiles(transcriptionModel: String) {
+        getOutputDirFor(transcriptionModel).deleteRecursively()
         updateStatus()
     }
 

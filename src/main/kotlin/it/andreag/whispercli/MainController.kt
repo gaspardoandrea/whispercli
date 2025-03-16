@@ -297,7 +297,8 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
             return
         }
         val items = listView.selectionModel.selectedItems.toTypedArray()
-        items.forEach { it.deleteAllOutputFiles() }
+        val model = AppPreferences.getInstance().getTranscriptionModel()
+        items.forEach { it.deleteAllOutputFiles(model) }
         refresh()
     }
 
