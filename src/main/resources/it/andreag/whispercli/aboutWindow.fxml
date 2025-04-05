@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
-<BorderPane prefHeight="300" prefWidth="450.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.andreag.whispercli.AboutWindow">
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="500" prefWidth="450.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.andreag.whispercli.AboutWindow">
     <center>
         <VBox BorderPane.alignment="CENTER">
-            <Label textAlignment="CENTER" text="%whisperCli"/>
-            <Label textAlignment="CENTER" text="%developedBy"/>
-            <Label textAlignment="CENTER" text="%perCaFoscari"/>
-            <Label textAlignment="CENTER" text="2024"/>
+            <Label text="%whisperCli" textAlignment="CENTER" />
+            <Label text="%developedBy" textAlignment="CENTER" />
+            <Label text="%perCaFoscari" textAlignment="CENTER" />
+            <Label text="2024 - 2025" textAlignment="CENTER">
+            <opaqueInsets>
+               <Insets />
+            </opaqueInsets></Label>
+            <TextArea editable="false" focusTraversable="false" text="%copyright" wrapText="true">
+            <opaqueInsets>
+               <Insets />
+            </opaqueInsets></TextArea>
         </VBox>
     </center>
     <bottom>
-        <Button mnemonicParsing="false" onAction="#close" text="Close" BorderPane.alignment="CENTER"/>
+        <Button mnemonicParsing="false" onAction="#close" text="Close" BorderPane.alignment="CENTER" />
     </bottom>
     <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
 </BorderPane>
