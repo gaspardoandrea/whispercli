@@ -3,13 +3,25 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <BorderPane prefHeight="500" prefWidth="450.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.andreag.whispercli.AboutWindow">
     <center>
         <VBox BorderPane.alignment="CENTER">
             <Label text="%whisperCli" textAlignment="CENTER" />
-            <Label text="%developedBy" textAlignment="CENTER" />
+            <HBox>
+                <Label text="%developedBy" textAlignment="CENTER" />
+                <Label text=" " textAlignment="CENTER" />
+                <Label text="Andrea Gaspardo" textAlignment="CENTER"/>
+            </HBox>
             <Label text="%perCaFoscari" textAlignment="CENTER" />
+
+            <HBox>
+                <Label text="%version" textAlignment="CENTER" />
+                <Label text=" " textAlignment="CENTER" />
+                <Label text="%softwareVersion" textAlignment="CENTER"/>
+            </HBox>
+
             <Label text="2024 - 2025" textAlignment="CENTER">
             <opaqueInsets>
                <Insets />
