@@ -5,7 +5,7 @@ facilitate a friendly use of whisper speech-to-text **OpenAI** utility.
 
 # Install whisperCli
 
-Download the install `.exe` from [my website](https://www.andreagaspardo.it/whispercli).
+Download the install `.exe` from [my website](https://www.andreagaspardo.it/software/whispercli).
 
 The install process will create a **WhisperCli** shortcut in your menu.
 
