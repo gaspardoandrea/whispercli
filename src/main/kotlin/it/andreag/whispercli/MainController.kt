@@ -118,7 +118,7 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
             "small" -> modelSmall
             "medium" -> modelMedium
             "large-v3" -> modelLarge
-            else -> modelTiny
+            else -> modelLarge
         }.isSelected = true
     }
 
