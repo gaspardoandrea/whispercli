@@ -2,7 +2,7 @@
 
 ## Install Python3
 <blockquote>
-Installare python da qui https://www.python.org/downloads/windows/
+Installare la versione 3.12 di python da qui https://www.python.org/downloads/windows/
 </blockquote>
 
 ## Install choco
