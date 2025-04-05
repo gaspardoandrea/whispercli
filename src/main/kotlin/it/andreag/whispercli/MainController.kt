@@ -357,7 +357,7 @@ class MainController : Initializable, ListChangeListener<AudioFile>, PropertyCha
     fun showAboutPopup() {
         logger.debug { "showAboutPopup" }
         val newWindow = Stage()
-        newWindow.title = "About " + bundle?.getString("softwareVersion")
+        newWindow.title = "About WhisperCli " + bundle?.getString("softwareVersion")
         val loader = FXMLLoader(javaClass.getResource("aboutWindow.fxml"))
         loader.resources = bundle
         newWindow.scene = Scene(loader.load())

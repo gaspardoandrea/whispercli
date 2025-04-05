@@ -23,7 +23,7 @@ class WhisperApplication : Application() {
         scene.stylesheets.add(css)
         fxmlLoader.getController<MainController>().setStage(stage)
         stage.icons.add(Image(WhisperApplication::class.java.getResourceAsStream("icon.png")))
-        stage.title = "WhisperCli"
+        stage.title = "WhisperCli " + bundle?.getString("softwareVersion")
         stage.scene = scene
         stage.show()
     }
