@@ -77,6 +77,7 @@ jlinkZip {
 
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    exclude("**/resources/models")
 
     manifest {
         attributes 'Main-Class': 'it.andreag.whispercli.WhisperApplication'
