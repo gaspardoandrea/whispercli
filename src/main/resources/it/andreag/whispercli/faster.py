@@ -11,6 +11,9 @@ lang = sys.argv[1]
 audio_file = sys.argv[2]
 model = sys.argv[3]
 outputDir = sys.argv[4]
+modelDir = sys.argv[5]
+
+print(modelDir)
 
 outputFile = Path(outputDir, Path(audio_file).stem + ".json")
 
@@ -21,7 +24,7 @@ batch_size = 16
 compute_type = "float32"
 
 # 1. Transcribe with original whisper (batched)
-model = whisperx.load_model(model, device, compute_type=compute_type)
+model = whisperx.load_model(model, device, compute_type=compute_type, download_root=modelDir)
 
 print("Loading " + audio_file)
 audio = whisperx.load_audio(audio_file)

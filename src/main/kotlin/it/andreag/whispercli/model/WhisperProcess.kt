@@ -3,9 +3,11 @@ package it.andreag.whispercli.model
 import it.andreag.whispercli.WhisperApplication
 import it.andreag.whispercli.events.ThreadDispatcher
 import it.andreag.whispercli.service.AppPreferences
+import it.andreag.whispercli.service.ApplicationPersistence
 import it.andreag.whispercli.setup.Utils
 import javafx.concurrent.Task
 import mu.KotlinLogging
+import java.io.File
 
 class WhisperProcess(private val audioFile: AudioFile) : Task<Boolean>() {
     private val logger = KotlinLogging.logger {}
@@ -49,7 +51,9 @@ class WhisperProcess(private val audioFile: AudioFile) : Task<Boolean>() {
             val bin = "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
             val file = Utils.getInstance().getPs1("whisper.ps1")
             val py = Utils.getInstance().getPs1("faster.py")
-            val pb = ProcessBuilder(bin, "-File", file, lang, inputFile, transcriptionModel, outputPath, py)
+            val modelPath = File(File(py).parentFile, "models")
+            val pb = ProcessBuilder(bin, "-File", file, lang, inputFile,
+                transcriptionModel, outputPath, modelPath.absolutePath, py)
 
             pb.redirectErrorStream(true)
             val process = pb.start()
