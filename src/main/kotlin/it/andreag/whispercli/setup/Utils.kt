@@ -5,6 +5,7 @@ import mu.KotlinLogging
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
+import java.util.ResourceBundle
 
 
 class Utils {
@@ -36,10 +37,16 @@ class Utils {
 
     fun getPs1(name: String): String {
         var rv = WhisperApplication::class.java.getResource(name)?.file.toString().trimStart('/')
+        println(rv)
+        val bundle: ResourceBundle? = ResourceBundle.getBundle("it.andreag.whispercli.bundle")
+        val version = bundle?.getString("softwareVersion")
         if (rv.contains("!")) {
-            rv = rv.replace("WhisperCli-1.0.jar!/it/andreag/whispercli/", "resources/")
+            rv = rv.replace("WhisperCli-$version.jar!/it/andreag/whispercli/", "resources/")
+            println(rv)
             rv = rv.replace("file:/", "")
+            println(rv)
             rv = rv.replace("/", "\\")
+            println(rv)
         }
         return rv
     }
