@@ -1,9 +1,7 @@
 package it.andreag.whispercli.model
 
-import it.andreag.whispercli.WhisperApplication
 import it.andreag.whispercli.events.ThreadDispatcher
 import it.andreag.whispercli.service.AppPreferences
-import it.andreag.whispercli.service.ApplicationPersistence
 import it.andreag.whispercli.setup.Utils
 import javafx.concurrent.Task
 import mu.KotlinLogging
@@ -52,8 +50,19 @@ class WhisperProcess(private val audioFile: AudioFile) : Task<Boolean>() {
             val file = Utils.getInstance().getPs1("whisper.ps1")
             val py = Utils.getInstance().getPs1("faster.py")
             val modelPath = File(File(py).parentFile, "models")
-            val pb = ProcessBuilder(bin, "-File", file, lang, inputFile,
-                transcriptionModel, outputPath, modelPath.absolutePath, py)
+            val args = arrayOf(
+                bin,
+                "-File",
+                file,
+                lang,
+                inputFile,
+                transcriptionModel,
+                outputPath,
+                modelPath.absolutePath,
+                py
+            )
+            System.out.println(args.joinToString(" "))
+            val pb = ProcessBuilder(*args)
 
             pb.redirectErrorStream(true)
             val process = pb.start()
