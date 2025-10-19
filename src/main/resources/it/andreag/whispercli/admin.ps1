@@ -5,5 +5,5 @@ choco install wget git ffmpeg -y
 cd c:\Windows\Temp
 wget -O get-pip.py https://bootstrap.pypa.io/get-pip.py
 py get-pip.py
-py -m pip install numpy pandas torch torchaudio whisperx transformers nltk ctranslate2 faster_whisper pyannote
+py -m pip install numpy pandas torch torchaudio whisperx transformers nltk ctranslate2 faster_whisper pyannote.audio omegaconf
 Start-Sleep 2
